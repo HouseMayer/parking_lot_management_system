@@ -3,14 +3,20 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.constant.MessageConstant;
+import com.example.constant.StatusConstant;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserPageQueryDTO;
 import com.example.entity.User;
+import com.example.exception.AccountNotFoundException;
+import com.example.exception.PasswordErrorException;
 import com.example.mapper.UserMapper;
 import com.example.result.PageResult;
 import com.example.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.util.List;
 
@@ -24,6 +30,9 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+    @Autowired
+    private UserMapper userMapper;
+
 
     /**
      * 分页查询方法
@@ -65,5 +74,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
 
+    @Override
+    public User login(UserLoginDTO userLoginDTO) {
+        String username = userLoginDTO.getUserName();
+        String password = userLoginDTO.getPassword();
 
+        //1、根据用户名查询数据库中的数据
+        User user = userMapper.getByUserName(username);
+
+        //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
+        if (user == null) {
+            //账号不存在
+            throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
+        }
+
+        //密码比对
+        //进行md5加密，然后再进行比对
+
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
+
+        if (!password.equals(user.getPassword())) {
+            //密码错误
+            throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
+        }
+
+
+        //3、返回实体对象
+        return user;
+    }
 }

@@ -13,6 +13,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserLoginVO implements Serializable {
 
+    // 主键值
+    private Long id;
+
+    // 用户名
+    private String userName;
+
+    //姓名
+    private String name;
+
+    //jwt令牌
     private String token;
 
 }
