@@ -22,6 +22,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    @Autowired
+    private IUserService userService;
+    @Autowired
+    private UserMapper userMapper;
+
+    /**
+     * 根据ID删除用户
+     *
+     * @param id 用户ID
+     * @return 操作结果
+     */
+    @DeleteMapping("/{id}")
+    public Result deleteById(@PathVariable Integer id) {
+
+        userMapper.deleteById(id);
+
+        return Result.success();
+    }
 
 
 
