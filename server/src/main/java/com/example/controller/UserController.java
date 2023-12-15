@@ -1,7 +1,11 @@
 package com.example.controller;
 
 
+import com.example.annotation.AutoFill;
 import com.example.constant.JwtClaimsConstant;
+import com.example.constant.PasswordConstant;
+import com.example.constant.StatusConstant;
+import com.example.context.BaseContext;
 import com.example.dto.UserDTO;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserPageQueryDTO;
@@ -14,9 +18,12 @@ import com.example.service.IUserService;
 import com.example.utils.JwtUtil;
 import com.example.vo.UserLoginVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,6 +90,20 @@ public class UserController {
                 .build();
 
         return Result.success(userLoginVO);
+    }
+
+    
+    /**
+     * 保存用户信息
+     * @param userDTO 用户信息
+     * @return 保存结果
+     */
+    @PostMapping("/save")
+    public Result save(UserDTO userDTO) {
+
+        userService.save(userDTO);
+
+        return Result.success();
     }
 
 

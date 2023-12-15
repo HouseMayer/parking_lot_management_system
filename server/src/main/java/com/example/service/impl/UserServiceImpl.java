@@ -4,20 +4,26 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.constant.MessageConstant;
+import com.example.constant.PasswordConstant;
 import com.example.constant.StatusConstant;
+import com.example.context.BaseContext;
+import com.example.dto.UserDTO;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserPageQueryDTO;
 import com.example.entity.User;
 import com.example.exception.AccountNotFoundException;
+import com.example.exception.LoginException;
 import com.example.exception.PasswordErrorException;
 import com.example.mapper.UserMapper;
 import com.example.result.PageResult;
 import com.example.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -73,7 +79,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return pageResult;
     }
 
-
+    /**
+     * 登陆
+     *
+     * @param userLoginDTO 登陆DTO对象
+     * @return user对象
+     */
     @Override
     public User login(UserLoginDTO userLoginDTO) {
         String username = userLoginDTO.getUserName();
@@ -101,5 +112,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //3、返回实体对象
         return user;
+    }
+
+    @Override
+    public void save(UserDTO userDTO) {
+        User user = new User();
+
+        // 对象属性拷贝
+        BeanUtils.copyProperties(userDTO, user);
+
+        if (userMapper.getByUserName(user.getUserName()) != null ){
+            throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+        }
+
+        // 设置默认密码
+        user.setPassword(DigestUtils.md5DigestAsHex(
+                PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+
+
+        userMapper.insertUser(user);
     }
 }

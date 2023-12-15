@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.UserDTO;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserPageQueryDTO;
 import com.example.entity.User;
@@ -19,4 +20,8 @@ public interface IUserService extends IService<User> {
     PageResult pageQuery(UserPageQueryDTO userPageQueryDTO);
 
     User login(UserLoginDTO userLoginDTO);
+
+
+
+    void save(UserDTO userDTO);
 }

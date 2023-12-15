@@ -9,10 +9,10 @@ public class UserDTO implements Serializable {
 
     private String name;
 
-    private String username;
+    private String userName;
 
     private String phone;
 
-    private String role;
+    private Integer role;
 
 }
