@@ -3,6 +3,6 @@ element:
     driver-class-name: com.mysql.cj.jdbc.Driver
     host: localhost
     port: 3306
-    database: parking-lot-management-system
+    database: parking_lot_management_system
     username: root
     password: 123
