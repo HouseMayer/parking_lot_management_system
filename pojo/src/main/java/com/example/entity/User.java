@@ -26,7 +26,7 @@ public class User implements Serializable {
      * 员工id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 员工姓名
@@ -36,7 +36,12 @@ public class User implements Serializable {
     /**
      * 登陆账号
      */
-    private String user_name;
+    private String userName;
+
+    /**
+     * 密码 默认密码123
+     */
+    private String password;
 
     /**
      * 员工电话
@@ -44,7 +49,7 @@ public class User implements Serializable {
     private String phone;
 
     /**
-     * 角色：0.管理员1.保安
+     * 角色：0.超级管理员1.管理员2.保安
      */
     private Integer role;
 
@@ -57,12 +62,22 @@ public class User implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime update_time;
+    private LocalDateTime updateTime;
 
     /**
      * 创建时间
      */
-    private LocalDateTime create_time;
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人
+     */
+    private Long createUser;
+
+    /**
+     * 修改人
+     */
+    private Long updateUser;
 
 
 }

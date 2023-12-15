@@ -55,5 +55,15 @@ public class Report implements Serializable {
      */
     private LocalDateTime create_time;
 
+    /**
+     * 创建人
+     */
+    private Long create_user;
+
+    /**
+     * 修改人
+     */
+    private Long update_user;
+
 
 }
