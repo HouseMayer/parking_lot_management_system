@@ -1,7 +1,9 @@
 package com.example.service;
 
+import com.example.dto.UserPageQueryDTO;
 import com.example.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.result.PageResult;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
+    PageResult pageQuery(UserPageQueryDTO userPageQueryDTO);
 }
