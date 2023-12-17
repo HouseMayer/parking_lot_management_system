@@ -1,7 +1,7 @@
 package com.example.mapper;
 
-import com.example.entity.Access_record;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.entity.Access_record;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

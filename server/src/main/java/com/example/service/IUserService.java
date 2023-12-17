@@ -1,10 +1,10 @@
 package com.example.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dto.UserDTO;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserPageQueryDTO;
 import com.example.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.result.PageResult;
 
 import java.util.List;

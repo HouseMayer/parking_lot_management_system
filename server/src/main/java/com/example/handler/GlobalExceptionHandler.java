@@ -1,8 +1,8 @@
 package com.example.handler;
 
-import com.example.result.Result;
 import com.example.constant.MessageConstant;
 import com.example.exception.BaseException;
+import com.example.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
