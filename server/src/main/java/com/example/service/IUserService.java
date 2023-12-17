@@ -7,6 +7,8 @@ import com.example.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.result.PageResult;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -24,4 +26,8 @@ public interface IUserService extends IService<User> {
 
 
     void save(UserDTO userDTO);
+
+    void deleteBatch(List<Long> ids);
+
+
 }

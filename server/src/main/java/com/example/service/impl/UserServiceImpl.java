@@ -14,6 +14,7 @@ import com.example.entity.User;
 import com.example.exception.AccountNotFoundException;
 import com.example.exception.LoginException;
 import com.example.exception.PasswordErrorException;
+import com.example.mapper.RoleMapper;
 import com.example.mapper.UserMapper;
 import com.example.result.PageResult;
 import com.example.service.IUserService;
@@ -132,4 +133,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         userMapper.insertUser(user);
     }
+
+    @Override
+    public void deleteBatch(List<Long> ids) {
+
+        for (Long id : ids) {
+            User user = getById(id);
+            user.setDeleted(StatusConstant.DISENABLE);
+            user.setUpdateTime(LocalDateTime.now());
+            user.setUpdateUser(BaseContext.getCurrentId());
+            updateById(user);
+        }
+
+    }
+
 }

@@ -1,15 +1,15 @@
 package com.example.controller;
 
 
-import com.example.annotation.AutoFill;
 import com.example.constant.JwtClaimsConstant;
-import com.example.constant.PasswordConstant;
-import com.example.constant.StatusConstant;
+import com.example.constant.MessageConstant;
 import com.example.context.BaseContext;
 import com.example.dto.UserDTO;
 import com.example.dto.UserLoginDTO;
 import com.example.dto.UserPageQueryDTO;
 import com.example.entity.User;
+import com.example.exception.AccountLockedException;
+import com.example.mapper.RoleMapper;
 import com.example.mapper.UserMapper;
 import com.example.properties.JwtProperties;
 import com.example.result.PageResult;
@@ -18,13 +18,12 @@ import com.example.service.IUserService;
 import com.example.utils.JwtUtil;
 import com.example.vo.UserLoginVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,6 +45,8 @@ public class UserController {
     private UserMapper userMapper;
     @Autowired
     private JwtProperties jwtProperties;
+    @Autowired
+    private RoleMapper roleMapper;
 
 
     /**
@@ -72,7 +73,10 @@ public class UserController {
     @PostMapping("/login")
     public Result<UserLoginVO> list(UserLoginDTO userLoginDTO) {
         log.info("员工登录：{}", userLoginDTO);
+
         User user = userService.login(userLoginDTO);
+
+        String role = roleMapper.getById(user.getRole());
 
         // 登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
@@ -86,15 +90,17 @@ public class UserController {
                 .id(user.getId())
                 .userName(user.getUserName())
                 .name(user.getName())
+                .role(role)
                 .token(token)
                 .build();
 
         return Result.success(userLoginVO);
     }
 
+
     
     /**
-     * 保存用户信息
+     * 添加员工
      * @param userDTO 用户信息
      * @return 保存结果
      */
@@ -107,14 +113,6 @@ public class UserController {
     }
 
 
-
-
-
-
-
-
-
-
     /**
      * 根据ID删除用户
      *
@@ -123,11 +121,33 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     public Result deleteById(@PathVariable Integer id) {
+        User user = userMapper.selectById(id);
 
+        if (user == null) {
+            throw new AccountLockedException(MessageConstant.ACCOUNT_NOT_FOUND);
+        }
+
+        user.setUpdateTime(LocalDateTime.now());
+        user.setUpdateUser(BaseContext.getCurrentId());
+        userMapper.updateById(user);
         userMapper.deleteById(id);
 
         return Result.success();
     }
+
+
+    @DeleteMapping
+    public Result deleteBatch(@RequestParam List<Long> ids){
+
+
+
+        userService.deleteBatch(ids);
+
+
+
+        return Result.success();
+    }
+
 
 
 

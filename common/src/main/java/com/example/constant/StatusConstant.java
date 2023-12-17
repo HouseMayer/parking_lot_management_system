@@ -5,9 +5,9 @@ package com.example.constant;
  */
 public class StatusConstant {
 
-    //启用
-    public static final Integer ENABLE = 1;
-
     //禁用
-    public static final Integer DISABLE = 0;
+    public static final int DISENABLE = 1;
+
+    //启用
+    public static final int ENABLE = 0;
 }
