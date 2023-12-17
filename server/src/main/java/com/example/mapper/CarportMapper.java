@@ -1,7 +1,7 @@
 package com.example.mapper;
 
-import com.example.entity.Carport;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.entity.Carport;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

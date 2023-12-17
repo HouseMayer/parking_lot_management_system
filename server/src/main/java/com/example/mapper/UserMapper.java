@@ -1,8 +1,8 @@
 package com.example.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.annotation.AutoFill;
 import com.example.entity.User;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
