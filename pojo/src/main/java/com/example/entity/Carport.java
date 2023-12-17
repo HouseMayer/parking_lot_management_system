@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author HouseMayer
- * @since 2023-12-15
+ * @since 2023-12-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -51,7 +51,7 @@ public class Carport implements Serializable {
     /**
      * 车牌号	
      */
-    private String license_plate;
+    private String licensePlate;
 
     /**
      * 状态：1.空闲 2.占用3.维修
@@ -67,22 +67,22 @@ public class Carport implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime update_time;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime create_time;
-
-    /**
-     * 创建人
-     */
-    private Long create_user;
+    private LocalDateTime updateTime;
 
     /**
      * 修改人
      */
-    private Long update_user;
+    private Long updateUser;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人
+     */
+    private Long createUser;
 
 
 }

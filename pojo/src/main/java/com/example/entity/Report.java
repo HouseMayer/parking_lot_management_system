@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author HouseMayer
- * @since 2023-12-15
+ * @since 2023-12-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -37,7 +37,7 @@ public class Report implements Serializable {
     /**
      * 时间
      */
-    private LocalDateTime record_date;
+    private LocalDateTime recordDate;
 
     /**
      * 逻辑删除
@@ -48,22 +48,22 @@ public class Report implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime update_time;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime create_time;
-
-    /**
-     * 创建人
-     */
-    private Long create_user;
+    private LocalDateTime updateTime;
 
     /**
      * 修改人
      */
-    private Long update_user;
+    private Long updateUser;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人
+     */
+    private Long createUser;
 
 
 }

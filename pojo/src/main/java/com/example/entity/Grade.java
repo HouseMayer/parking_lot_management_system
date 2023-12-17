@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author HouseMayer
- * @since 2023-12-15
+ * @since 2023-12-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -31,7 +31,12 @@ public class Grade implements Serializable {
     /**
      * 车牌号
      */
-    private String license_plate;
+    private String licensePlate;
+
+    /**
+     * 车主
+     */
+    private String owner;
 
     /**
      * 级别：0.黑名单1.vip
@@ -42,6 +47,11 @@ public class Grade implements Serializable {
      * 截止时间
      */
     private LocalDateTime deadline;
+
+    /**
+     * 手机号码
+     */
+    private String phone;
 
     /**
      * 备注
@@ -57,22 +67,22 @@ public class Grade implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime update_time;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime create_time;
-
-    /**
-     * 创建人
-     */
-    private Long create_user;
+    private LocalDateTime updateTime;
 
     /**
      * 修改人
      */
-    private Long update_user;
+    private Long updateUser;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人
+     */
+    private Long createUser;
 
 
 }

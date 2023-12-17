@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author HouseMayer
- * @since 2023-12-15
+ * @since 2023-12-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,17 +32,17 @@ public class Access_record implements Serializable {
     /**
      * 车牌号
      */
-    private String license_plate;
+    private String licensePlate;
 
     /**
      * 进入时间
      */
-    private LocalDateTime start_time;
+    private LocalDateTime startTime;
 
     /**
      * 离场时间
      */
-    private LocalDateTime end_time;
+    private LocalDateTime endTime;
 
     /**
      * 车位号
@@ -63,22 +63,22 @@ public class Access_record implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime update_time;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime create_time;
-
-    /**
-     * 创建人
-     */
-    private Long create_user;
+    private LocalDateTime updateTime;
 
     /**
      * 修改人
      */
-    private Long update_user;
+    private Long updateUser;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人
+     */
+    private Long createUser;
 
 
 }
