@@ -4,19 +4,20 @@ package com.example.controller;
 import com.example.constant.JwtClaimsConstant;
 import com.example.constant.MessageConstant;
 import com.example.context.BaseContext;
-import com.example.dto.UserDTO;
-import com.example.dto.UserLoginDTO;
-import com.example.dto.UserPageQueryDTO;
-import com.example.entity.User;
+import com.example.dto.AdminDTO;
+import com.example.dto.AdminLoginDTO;
+import com.example.dto.AdminPageQueryDTO;
+import com.example.entity.Admin;
 import com.example.exception.AccountLockedException;
+import com.example.mapper.AdminMapper;
 import com.example.mapper.RoleMapper;
-import com.example.mapper.UserMapper;
 import com.example.properties.JwtProperties;
 import com.example.result.PageResult;
 import com.example.result.Result;
-import com.example.service.IUserService;
+import com.example.service.IAdminService;
 import com.example.utils.JwtUtil;
-import com.example.vo.UserLoginVO;
+import com.example.vo.AdminInfoVO;
+import com.example.vo.AdminLoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +38,12 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/admin")
+public class AdminController {
     @Autowired
-    private IUserService userService;
+    private IAdminService adminService;
     @Autowired
-    private UserMapper userMapper;
+    private AdminMapper adminMapper;
     @Autowired
     private JwtProperties jwtProperties;
     @Autowired
@@ -52,14 +53,13 @@ public class UserController {
     /**
      * 根据用户分页查询条件获取页面数据
      *
-     * @param userPageQueryDTO 用户分页查询DTO对象
+     * @param adminPageQueryDTO 用户分页查询DTO对象
      * @return 结果对象，包含分页结果数据
      */
     @GetMapping("/page")
-    public Result<PageResult> list(UserPageQueryDTO userPageQueryDTO) {
+    public Result<PageResult> list(AdminPageQueryDTO adminPageQueryDTO) {
 
-        PageResult pageResult = userService.pageQuery(userPageQueryDTO);
-
+        PageResult pageResult = adminService.pageQuery(adminPageQueryDTO);
 
         return Result.success(pageResult);
     }
@@ -67,47 +67,53 @@ public class UserController {
     /**
      * 员工登录
      *
-     * @param userLoginDTO 员工登录信息
+     * @param adminLoginDTO 员工登录信息
      * @return 用户登录结果
      */
     @PostMapping("/login")
-    public Result<UserLoginVO> list(UserLoginDTO userLoginDTO) {
-        log.info("员工登录：{}", userLoginDTO);
+    public Result<AdminLoginVO> login(@RequestBody AdminLoginDTO adminLoginDTO) {
+        log.info("员工登录：{}", adminLoginDTO);
 
-        User user = userService.login(userLoginDTO);
+        Admin admin = adminService.login(adminLoginDTO);
 
-        String role = roleMapper.getById(user.getRole());
+        String role = roleMapper.getById(admin.getRole());
 
         // 登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.EMP_ID, user.getId());
+        claims.put(JwtClaimsConstant.EMP_ID, admin.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
                 claims);
-
-        UserLoginVO userLoginVO = UserLoginVO.builder()
-                .id(user.getId())
-                .userName(user.getUserName())
-                .name(user.getName())
-                .role(role)
-                .token(token)
-                .build();
-
-        return Result.success(userLoginVO);
+        return Result.success(new AdminLoginVO(token));
     }
+
+    /**
+     * 获取用户信息
+     * @param token 用户的令牌
+     * @return 用户信息结果
+     */
+    @GetMapping("/info")
+    public Result<AdminInfoVO> info(String token) {
+
+        AdminInfoVO adminInfoVO = adminService.info(token);
+
+        // 返回用户信息结果
+        return Result.success(adminInfoVO);
+    }
+
 
 
     
     /**
      * 添加员工
-     * @param userDTO 用户信息
+     * @param adminDTO 用户信息
      * @return 保存结果
      */
     @PostMapping("/save")
-    public Result save(UserDTO userDTO) {
+    public Result save(AdminDTO adminDTO) {
 
-        userService.save(userDTO);
+        adminService.save(adminDTO);
 
         return Result.success();
     }
@@ -121,16 +127,16 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     public Result deleteById(@PathVariable Integer id) {
-        User user = userMapper.selectById(id);
+        Admin admin = adminMapper.selectById(id);
 
-        if (user == null) {
+        if (admin == null) {
             throw new AccountLockedException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
 
-        user.setUpdateTime(LocalDateTime.now());
-        user.setUpdateUser(BaseContext.getCurrentId());
-        userMapper.updateById(user);
-        userMapper.deleteById(id);
+        admin.setUpdateTime(LocalDateTime.now());
+        admin.setUpdateUser(BaseContext.getCurrentId());
+        adminMapper.updateById(admin);
+        adminMapper.deleteById(id);
 
         return Result.success();
     }
@@ -141,8 +147,7 @@ public class UserController {
 
 
 
-        userService.deleteBatch(ids);
-
+        adminService.deleteBatch(ids);
 
 
         return Result.success();

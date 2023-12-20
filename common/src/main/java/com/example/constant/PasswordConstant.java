@@ -5,6 +5,6 @@ package com.example.constant;
  */
 public class PasswordConstant {
 
-    public static final String DEFAULT_PASSWORD = "123";
+    public static final String DEFAULT_PASSWORD = "111111";
 
 }

@@ -8,9 +8,9 @@ import java.io.Serializable;
  * C端用户登录
  */
 @Data
-public class UserLoginDTO implements Serializable {
+public class AdminLoginDTO implements Serializable {
 
-    private String userName;
+    private String username;
     private String password;
 
 }

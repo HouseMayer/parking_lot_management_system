@@ -11,20 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLoginVO implements Serializable {
-
-    // 主键值
-    private Long id;
-
-    // 用户名
-    private String userName;
-
-    //姓名
-    private String name;
-
-    //姓名
-    private String role;
-
+public class AdminLoginVO implements Serializable {
     //jwt令牌
     private String token;
 

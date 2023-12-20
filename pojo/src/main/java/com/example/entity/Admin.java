@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author HouseMayer
- * @since 2023-12-17
+ * @since 2023-12-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class User implements Serializable {
+public class Admin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public class User implements Serializable {
     /**
      * 登陆账号
      */
-    private String userName;
+    private String user_name;
 
     /**
      * 密码 默认密码123
@@ -58,6 +58,11 @@ public class User implements Serializable {
      * 头像
      */
     private String avatar;
+
+    /**
+     * 介绍
+     */
+    private String introduction;
 
     /**
      * 逻辑删除

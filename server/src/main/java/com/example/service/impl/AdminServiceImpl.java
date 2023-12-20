@@ -4,26 +4,35 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.constant.JwtClaimsConstant;
 import com.example.constant.MessageConstant;
 import com.example.constant.PasswordConstant;
 import com.example.constant.StatusConstant;
 import com.example.context.BaseContext;
-import com.example.dto.UserDTO;
-import com.example.dto.UserLoginDTO;
-import com.example.dto.UserPageQueryDTO;
+import com.example.dto.AdminDTO;
+import com.example.dto.AdminLoginDTO;
+import com.example.dto.AdminPageQueryDTO;
+import com.example.entity.Admin;
 import com.example.entity.User;
 import com.example.exception.AccountNotFoundException;
 import com.example.exception.LoginException;
 import com.example.exception.PasswordErrorException;
-import com.example.mapper.UserMapper;
+import com.example.mapper.AdminMapper;
+import com.example.mapper.RoleMapper;
+import com.example.properties.JwtProperties;
 import com.example.result.PageResult;
-import com.example.service.IUserService;
+import com.example.service.IAdminService;
+import com.example.utils.JwtUtil;
+import com.example.vo.AdminInfoVO;
+import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,10 +43,15 @@ import java.util.List;
  * @author HouseMayer
  * @since 2023-12-15
  */
+@Slf4j
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
     @Autowired
-    private UserMapper userMapper;
+    private AdminMapper adminMapper;
+    @Autowired
+    private JwtProperties jwtProperties;
+    @Autowired
+    private RoleMapper roleMapper;
 
 
     /**
@@ -47,7 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @return 分页查询结果PageResult对象
      */
     @Override
-    public PageResult pageQuery(UserPageQueryDTO userPageQueryDTO) {
+    public PageResult pageQuery(AdminPageQueryDTO userPageQueryDTO) {
 
         // 如果参数为空，则抛出运行时异常
         if (userPageQueryDTO == null) {
@@ -60,13 +74,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String name = userPageQueryDTO.getName();
 
         // 创建查询条件封装对象，并根据名称进行模糊查询
-        QueryWrapper<User> wrapper = new QueryWrapper<User>().like("name", name);
+        QueryWrapper<Admin> wrapper = new QueryWrapper<Admin>().like("name", name);
 
         // 创建分页对象
-        IPage<User> page = new Page<>(currentPage, pageSize);
+        IPage<Admin> page = new Page<>(currentPage, pageSize);
 
         // 执行查询，并获取查询结果列表
-        List<User> userList = list(page, wrapper);
+        List<Admin> userList = list(page, wrapper);
 
         // 创建分页查询结果对象
         PageResult pageResult = new PageResult();
@@ -82,19 +96,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     /**
      * 登陆
      *
-     * @param userLoginDTO 登陆DTO对象
+     * @param adminLoginDTO 登陆DTO对象
      * @return user对象
      */
     @Override
-    public User login(UserLoginDTO userLoginDTO) {
-        String username = userLoginDTO.getUserName();
-        String password = userLoginDTO.getPassword();
+    public Admin login(AdminLoginDTO adminLoginDTO) {
+        String username = adminLoginDTO.getUsername();
+        String password = adminLoginDTO.getPassword();
 
         //1、根据用户名查询数据库中的数据
-        User user = userMapper.getByUserName(username);
+        Admin admin = adminMapper.getByUserName(username);
 
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
-        if (user == null) {
+        if (admin == null) {
             //账号不存在
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
@@ -104,24 +118,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         password = DigestUtils.md5DigestAsHex(password.getBytes());
 
-        if (!password.equals(user.getPassword())) {
+        if (!password.equals(admin.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
 
         //3、返回实体对象
-        return user;
+        return admin;
     }
 
     @Override
-    public void save(UserDTO userDTO) {
+    public void save(AdminDTO adminDTO) {
         User user = new User();
 
         // 对象属性拷贝
-        BeanUtils.copyProperties(userDTO, user);
+        BeanUtils.copyProperties(adminDTO, user);
 
-        if (userMapper.getByUserName(user.getUserName()) != null ){
+        if (adminMapper.getByUserName(user.getUserName()) != null ){
             throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
         }
 
@@ -130,20 +144,54 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
 
-        userMapper.insertUser(user);
+        adminMapper.insertUser(user);
     }
+
 
     @Override
     public void deleteBatch(List<Long> ids) {
 
         for (Long id : ids) {
-            User user = getById(id);
-            user.setDeleted(StatusConstant.DISENABLE);
-            user.setUpdateTime(LocalDateTime.now());
-            user.setUpdateUser(BaseContext.getCurrentId());
-            updateById(user);
+            Admin admin = adminMapper.getById(id);
+
+            admin.setDeleted(StatusConstant.DISENABLE);
+            admin.setUpdateTime(LocalDateTime.now());
+            admin.setUpdateUser(BaseContext.getCurrentId());
+
+            adminMapper.updateById(admin);
         }
+        adminMapper.deleteBatchIds(ids);
 
     }
+
+    @Override
+    public AdminInfoVO info(String token) {
+
+        // 解析令牌获取claims
+        Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
+
+        // 获取员工id
+        Long id = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
+        log.info("id=" + id);
+
+        // 根据id获取用户信息
+        Admin admin = adminMapper.getById(id);
+
+        // 获取用户的角色
+        String role = roleMapper.getById(admin.getRole());
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        // 构建并返回AdminInfoVO对象
+        AdminInfoVO adminInfoVO = AdminInfoVO.builder()
+                .avatar(admin.getAvatar())
+                .introduction(admin.getIntroduction())
+                .name(admin.getName())
+                .roles(roles)
+                .build();
+
+        return adminInfoVO;
+    }
+
 
 }

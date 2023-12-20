@@ -13,12 +13,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoVO implements Serializable {
+public class AdminInfoVO implements Serializable {
 
     private String avatar;
     private String introduction;
     private String name;
     private List<String> roles;
-
 
 }
