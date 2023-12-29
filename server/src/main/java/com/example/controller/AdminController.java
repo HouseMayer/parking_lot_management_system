@@ -64,6 +64,21 @@ public class AdminController {
         return Result.success(pageResult);
     }
 
+
+    /**
+     * 根据id获取信息
+     *
+     * @param id id
+     * @return 返回信息
+     */
+    @GetMapping("/{id}")
+    public Result<Admin> list(@RequestParam Long id) {
+        Admin admin = adminService.getById(id);
+        return Result.success(admin);
+    }
+
+
+
     /**
      * 员工登录
      *

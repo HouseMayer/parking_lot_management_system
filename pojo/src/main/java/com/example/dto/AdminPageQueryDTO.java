@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class AdminPageQueryDTO implements Serializable {
 
     //员工姓名
-    private String name;
+    private String keyword;
 
     //页码
     private int page;

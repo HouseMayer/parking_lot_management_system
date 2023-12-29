@@ -57,21 +57,24 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     /**
      * 分页查询方法
      *
-     * @param userPageQueryDTO 用户分页查询DTO对象
+     * @param adminPageQueryDTO 用户分页查询DTO对象
      * @return 分页查询结果PageResult对象
      */
     @Override
-    public PageResult pageQuery(AdminPageQueryDTO userPageQueryDTO) {
+    public PageResult pageQuery(AdminPageQueryDTO adminPageQueryDTO) {
 
         // 如果参数为空，则抛出运行时异常
-        if (userPageQueryDTO == null) {
+        if (adminPageQueryDTO == null) {
             throw new RuntimeException("参数不能为空");
         }
 
         // 获取当前页面、每页数量和名称
-        int currentPage = userPageQueryDTO.getPage();
-        int pageSize = userPageQueryDTO.getPageSize();
-        String name = userPageQueryDTO.getName();
+        int currentPage = adminPageQueryDTO.getPage();
+        int pageSize = adminPageQueryDTO.getPageSize();
+        String name = adminPageQueryDTO.getKeyword();
+        log.info("当前页面："+currentPage);
+        log.info("每页数量："+pageSize);
+        log.info("名称："+name);
 
         // 创建查询条件封装对象，并根据名称进行模糊查询
         QueryWrapper<Admin> wrapper = new QueryWrapper<Admin>().like("name", name);
@@ -80,14 +83,18 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         IPage<Admin> page = new Page<>(currentPage, pageSize);
 
         // 执行查询，并获取查询结果列表
-        List<Admin> userList = list(page, wrapper);
+        IPage<Admin> pageRes = adminMapper.selectPage(page, wrapper);
+        for (Admin record : pageRes.getRecords()) {
+            record.setRole(roleMapper.getById(record.getRole()));
+        }
 
         // 创建分页查询结果对象
         PageResult pageResult = new PageResult();
 
         // 设置查询结果记录和总记录数
-        pageResult.setRecords(userList);
-        pageResult.setTotal(userList.size());
+        pageResult.setRecords(pageRes.getRecords());
+        log.info("分页查询结果"+pageRes.getRecords().toString());
+        pageResult.setTotal(pageRes.getTotal());
 
         // 返回分页查询结果
         return pageResult;

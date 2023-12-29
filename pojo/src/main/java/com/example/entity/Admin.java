@@ -37,7 +37,7 @@ public class Admin implements Serializable {
     /**
      * 登陆账号
      */
-    private String user_name;
+    private String userName;
 
     /**
      * 密码 默认密码123
@@ -52,7 +52,7 @@ public class Admin implements Serializable {
     /**
      * 角色：0.超级管理员1.管理员2.保安
      */
-    private Integer role;
+    private String role;
 
     /**
      * 头像

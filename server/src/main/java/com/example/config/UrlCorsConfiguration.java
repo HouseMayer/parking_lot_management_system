@@ -20,7 +20,7 @@ public class UrlCorsConfiguration implements Filter {
         //重新预检验跨域的缓存时间 (s)
         response.setHeader("Access-Control-Max-Age", "3600");
         //允许跨域的请求头
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type, x-token");
         //是否携带cookie
         response.setHeader("Access-Control-Allow-Credentials", "true");
         // 设置响应的类型及字符集编码
