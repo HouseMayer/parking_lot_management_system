@@ -29,6 +29,11 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
 
     @Autowired
     private AreaMapper areaMapper;
+    /**
+     * 分页查询区域信息
+     * @param areaPageQueryDTO 区域分页查询参数
+     * @return 分页查询结果
+     */
     @Override
     public PageResult pageQuery(AreaPageQueryDTO areaPageQueryDTO) {
 
@@ -53,7 +58,6 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
 
         // 执行查询，并获取查询结果列表
         IPage<Area> pageRes = areaMapper.selectPage(page, wrapper);
-
 
         // 创建分页查询结果对象
         PageResult pageResult = new PageResult();

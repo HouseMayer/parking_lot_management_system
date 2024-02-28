@@ -176,6 +176,11 @@ public class AdminController {
     }
 
 
+    /**
+     * 批量删除数据
+     * @param ids 要删除的数据id列表
+     * @return 删除结果
+     */
     @DeleteMapping("/deletebatch")
     public Result deleteBatch(@RequestBody List<Long> ids){
 
