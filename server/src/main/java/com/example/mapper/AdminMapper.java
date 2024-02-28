@@ -5,6 +5,7 @@ import com.example.annotation.AutoFill;
 import com.example.entity.Admin;
 import com.example.entity.User;
 import com.example.enumeration.OperationType;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -23,7 +24,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
     Admin getByUserName(String username);
 
     @AutoFill(OperationType.INSERT)
-    @Select("insert into admin" +
+    @Insert("insert into admin" +
             "(name,user_name,phone,password,role,deleted,update_time,update_user,create_time,create_user) " +
             "values" +
             "(#{name},#{userName},#{phone},#{password},#{role},#{deleted},#{updateTime},#{updateUser},#{createTime},#{createUser})")

@@ -72,7 +72,7 @@ public class AdminController {
      * @return 返回信息
      */
     @GetMapping("/{id}")
-    public Result<Admin> list(@RequestParam Long id) {
+    public Result<Admin> getById(@PathVariable Integer id) {
         Admin admin = adminService.getById(id);
         return Result.success(admin);
     }
@@ -95,11 +95,14 @@ public class AdminController {
 
         // 登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
+
         claims.put(JwtClaimsConstant.EMP_ID, admin.getId());
+
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
                 claims);
+        
         return Result.success(new AdminLoginVO(token));
     }
 
@@ -126,9 +129,17 @@ public class AdminController {
      * @return 保存结果
      */
     @PostMapping("/save")
-    public Result save(AdminDTO adminDTO) {
+    public Result save(@RequestBody AdminDTO adminDTO) {
 
         adminService.save(adminDTO);
+
+        return Result.success();
+    }
+
+    @PostMapping("/update")
+    public Result update(@RequestBody AdminDTO adminDTO) {
+
+        adminService.update(adminDTO);
 
         return Result.success();
     }
@@ -157,13 +168,10 @@ public class AdminController {
     }
 
 
-    @DeleteMapping
-    public Result deleteBatch(@RequestParam List<Long> ids){
-
-
+    @DeleteMapping("/deletebatch")
+    public Result deleteBatch(@RequestBody List<Long> ids){
 
         adminService.deleteBatch(ids);
-
 
         return Result.success();
     }

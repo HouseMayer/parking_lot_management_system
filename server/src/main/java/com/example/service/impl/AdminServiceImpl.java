@@ -150,8 +150,27 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         user.setPassword(DigestUtils.md5DigestAsHex(
                 PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-
+        user.setDeleted(0);
         adminMapper.insertUser(user);
+    }
+
+    @Override
+    public void update(AdminDTO adminDTO) {
+        Long id = adminDTO.getId();
+        System.out.println("asdsd:" +id );
+        Admin admin = adminMapper.getById(id);
+        if (!adminDTO.getUserName().equals(admin.getUserName())){
+            if (adminMapper.getByUserName(adminDTO.getUserName()) != null) {
+                throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+            }
+        }
+        admin.setName(adminDTO.getName());
+        admin.setUserName(adminDTO.getUserName());
+        admin.setRole(String.valueOf(adminDTO.getRole()));
+        admin.setPhone(adminDTO.getPhone());
+        admin.setUpdateTime(LocalDateTime.now());
+        admin.setUpdateUser(BaseContext.getCurrentId());
+        adminMapper.updateById(admin);
     }
 
 

@@ -28,6 +28,9 @@ public interface IAdminService extends IService<Admin> {
     void save(AdminDTO adminDTO);
 
     @Transactional
+    void update(AdminDTO adminDTO);
+
+    @Transactional
     void deleteBatch(List<Long> ids);
 
 
