@@ -137,11 +137,18 @@ public class AdminController {
         return Result.success();
     }
 
+    /**
+     * 更新管理员信息
+     * @param adminDTO 管理员信息
+     * @return 更新结果
+     */
     @PostMapping("/update")
     public Result update(@RequestBody AdminDTO adminDTO) {
 
+        // 调用服务层更新管理员信息
         adminService.update(adminDTO);
 
+        // 返回更新结果
         return Result.success();
     }
 
