@@ -1,14 +1,21 @@
 package com.example.controller;
 
 
+import com.example.constant.MessageConstant;
+import com.example.context.BaseContext;
 import com.example.dto.AreaDTO;
 import com.example.dto.AreaPageQueryDTO;
 import com.example.entity.Area;
+import com.example.exception.AccountLockedException;
+import com.example.mapper.AreaMapper;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IAreaService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -19,12 +26,16 @@ import org.springframework.web.bind.annotation.*;
  * @author HouseMayer
  * @since 2023-12-15
  */
+@Slf4j
 @RestController
 @RequestMapping("/area")
 public class AreaController {
 
     @Autowired
     private IAreaService areaService;
+
+    @Autowired
+    private AreaMapper areaMapper;
 
     /**
      * 分页查询区域列表
@@ -76,6 +87,36 @@ public class AreaController {
         areaService.update(areaDTO);
 
         // 返回更新结果
+        return Result.success();
+    }
+
+
+    /**
+     * 根据ID删除区域
+     * @param id 区域ID
+     * @return 删除结果
+     */
+    @DeleteMapping("/{id}")
+    public Result deleteById(@PathVariable Integer id) {
+        // 根据ID查询区域
+        Area area = areaMapper.selectById(id);
+
+        // 如果区域不存在，则抛出区域不存在异常
+        if (area == null) {
+            throw new AccountLockedException(MessageConstant.AREA_NOT_FOUND);
+        }
+
+        // 更新区域的更新时间和更新用户
+        area.setUpdateTime(LocalDateTime.now());
+        area.setUpdateUser(BaseContext.getCurrentId());
+
+        // 更新区域信息
+        areaMapper.updateById(area);
+
+        // 删除区域
+        areaMapper.deleteById(id);
+
+        // 返回删除成功的结果
         return Result.success();
     }
 
