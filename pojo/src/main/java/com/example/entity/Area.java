@@ -43,22 +43,22 @@ public class Area implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime update_time;
+    private LocalDateTime updateTime;
 
     /**
      * 修改人
      */
-    private Long update_user;
+    private Long updateUser;
 
     /**
      * 创建时间
      */
-    private LocalDateTime create_time;
+    private LocalDateTime createTime;
 
     /**
      * 创建人
      */
-    private Long create_user;
+    private Long createUser;
 
 
 }
