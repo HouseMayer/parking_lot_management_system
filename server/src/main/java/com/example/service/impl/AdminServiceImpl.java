@@ -135,6 +135,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         return admin;
     }
 
+    /**
+     * 保存管理员信息
+     * @param adminDTO 管理员信息
+     */
     @Override
     public void save(AdminDTO adminDTO) {
         User user = new User();
@@ -142,6 +146,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         // 对象属性拷贝
         BeanUtils.copyProperties(adminDTO, user);
 
+        // 检查用户名是否已存在
         if (adminMapper.getByUserName(user.getUserName()) != null ){
             throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
         }
@@ -154,16 +159,22 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         adminMapper.insertUser(user);
     }
 
+    /**
+     * 更新管理员信息
+     * @param adminDTO 管理员DTO对象
+     */
     @Override
     public void update(AdminDTO adminDTO) {
         Long id = adminDTO.getId();
         System.out.println("asdsd:" +id );
         Admin admin = adminMapper.getById(id);
+        // 判断用户名是否已经存在
         if (!adminDTO.getUserName().equals(admin.getUserName())){
             if (adminMapper.getByUserName(adminDTO.getUserName()) != null) {
                 throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
             }
         }
+        // 更新管理员信息
         admin.setName(adminDTO.getName());
         admin.setUserName(adminDTO.getUserName());
         admin.setRole(String.valueOf(adminDTO.getRole()));
@@ -174,22 +185,40 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
 
+    /**
+     * 批量删除管理员
+     * @param ids 管理员id列表
+     */
     @Override
     public void deleteBatch(List<Long> ids) {
 
+        // 遍历管理员id列表
         for (Long id : ids) {
+            // 根据管理员id获取管理员对象
             Admin admin = adminMapper.getById(id);
 
+            // 设置管理员为禁用状态
             admin.setDeleted(StatusConstant.DISENABLE);
+            // 设置管理员更新时间为当前时间
             admin.setUpdateTime(LocalDateTime.now());
+            // 设置管理员更新用户为当前用户
             admin.setUpdateUser(BaseContext.getCurrentId());
 
+            // 更新管理员对象
             adminMapper.updateById(admin);
         }
+
+        // 执行批量删除操作
         adminMapper.deleteBatchIds(ids);
 
     }
 
+    /**
+     * 根据令牌获取管理员信息
+     *
+     * @param token 令牌
+     * @return 管理员信息
+     */
     @Override
     public AdminInfoVO info(String token) {
 
@@ -218,6 +247,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         return adminInfoVO;
     }
+
 
 
 }
