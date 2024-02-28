@@ -30,6 +30,7 @@ import java.util.Map;
 /**
  * <p>
  *  前端控制器
+ *  用户
  * </p>
  *
  * @author HouseMayer
@@ -102,7 +103,7 @@ public class AdminController {
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
                 claims);
-        
+
         return Result.success(new AdminLoginVO(token));
     }
 
