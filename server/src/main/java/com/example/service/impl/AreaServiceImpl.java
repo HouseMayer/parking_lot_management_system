@@ -4,14 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.dto.AdminPageQueryDTO;
+import com.example.constant.MessageConstant;
+import com.example.dto.AreaDTO;
 import com.example.dto.AreaPageQueryDTO;
-import com.example.entity.Admin;
 import com.example.entity.Area;
+import com.example.entity.User;
+import com.example.exception.LoginException;
 import com.example.mapper.AreaMapper;
 import com.example.result.PageResult;
 import com.example.service.IAreaService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +73,26 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         // 返回分页查询结果
         return pageResult;
 
+    }
+
+    /**
+     * 保存区域信息
+     * @param areaDTO 区域信息DTO对象
+     */
+    @Override
+    public void save(AreaDTO areaDTO) {
+        Area area = new Area();
+        User user = new User();
+
+        // 对象属性拷贝
+        BeanUtils.copyProperties(areaDTO, area);
+
+        // 检查区域名是否已存在
+        if (areaMapper.getByUserName(area.getName()) != null ){
+            throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
+        }
+
+        user.setDeleted(0);
+        areaMapper.insertArea(user);
     }
 }

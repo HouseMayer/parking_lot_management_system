@@ -1,18 +1,14 @@
 package com.example.controller;
 
 
-import com.example.dto.AdminPageQueryDTO;
+import com.example.dto.AreaDTO;
 import com.example.dto.AreaPageQueryDTO;
-import com.example.entity.Admin;
 import com.example.entity.Area;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IAreaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -56,6 +52,15 @@ public class AreaController {
         Area area = areaService.getById(id);
         // 返回成功的结果，包含获取到的区域信息
         return Result.success(area);
+    }
+
+
+    @PostMapping("/save")
+    public Result save(@RequestBody AreaDTO areaDTO) {
+
+        areaService.save(areaDTO);
+
+        return Result.success();
     }
 
 
