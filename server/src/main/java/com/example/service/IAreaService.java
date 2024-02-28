@@ -1,7 +1,10 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dto.AdminPageQueryDTO;
+import com.example.dto.AreaPageQueryDTO;
 import com.example.entity.Area;
+import com.example.result.PageResult;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.example.entity.Area;
  */
 public interface IAreaService extends IService<Area> {
 
+    PageResult pageQuery(AreaPageQueryDTO areaPageQueryDTO);
 }
