@@ -166,7 +166,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public void update(AdminDTO adminDTO) {
         Long id = adminDTO.getId();
-        System.out.println("asdsd:" +id );
         Admin admin = adminMapper.getById(id);
         // 判断用户名是否已经存在
         if (!adminDTO.getUserName().equals(admin.getUserName())){
@@ -227,7 +226,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         // 获取员工id
         Long id = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-        log.info("id=" + id);
 
         // 根据id获取用户信息
         Admin admin = adminMapper.getById(id);
