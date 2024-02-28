@@ -19,4 +19,6 @@ public interface IAreaService extends IService<Area> {
     PageResult pageQuery(AreaPageQueryDTO areaPageQueryDTO);
 
     void save(AreaDTO areaDTO);
+
+    void update(AreaDTO areaDTO);
 }

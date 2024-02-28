@@ -64,7 +64,20 @@ public class AreaController {
     }
 
 
+    /**
+     * 更新区域信息
+     * @param areaDTO 区域信息DTO对象
+     * @return 更新结果
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody AreaDTO areaDTO) {
 
+        // 调用服务层更新管理员信息
+        areaService.update(areaDTO);
+
+        // 返回更新结果
+        return Result.success();
+    }
 
 
 }

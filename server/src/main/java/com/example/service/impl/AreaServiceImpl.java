@@ -95,4 +95,22 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         user.setDeleted(0);
         areaMapper.insertArea(user);
     }
+
+    /**
+     * 更新区域信息
+     * @param areaDTO 包含区域信息的DTO对象
+     */
+    @Override
+    public void update(AreaDTO areaDTO) {
+        Long id = areaDTO.getId();
+        Area area = this.getById(id);
+        // 检查区域名是否已存在
+        if (!areaDTO.getName().equals(area.getName())){
+            if (areaMapper.getByUserName(area.getName()) != null ){
+                throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
+            }
+            area.setName(areaDTO.getName());
+            areaMapper.updateById(area);
+        }
+    }
 }
