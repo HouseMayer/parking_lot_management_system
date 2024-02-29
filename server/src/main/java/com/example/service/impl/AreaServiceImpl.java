@@ -87,7 +87,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
     @Override
     public void save(AreaDTO areaDTO) {
         Area area = new Area();
-        User user = new User();
+
 
         // 对象属性拷贝
         BeanUtils.copyProperties(areaDTO, area);
@@ -97,8 +97,8 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
             throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
         }
 
-        user.setDeleted(0);
-        areaMapper.insertArea(user);
+        area.setDeleted(0);
+        areaMapper.insertArea(area);
     }
 
     /**
@@ -115,11 +115,6 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
                 throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
             }
             area.setName(areaDTO.getName());
-            List<Carport> carportList = carportMapper.getByAreaId(id);
-            carportList.forEach( en -> {
-                en.setArea(areaDTO.getName());
-                carportMapper.updateById(en);
-            });
             areaMapper.updateById(area);
         }
     }

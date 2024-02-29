@@ -24,5 +24,5 @@ public interface AreaMapper extends BaseMapper<Area> {
     @Insert("insert into area(name,deleted,update_time,update_user,create_time,create_user) " +
             "values" +
             "(#{name},#{deleted},#{updateTime},#{updateUser},#{createTime},#{createUser})")
-    void insertArea(User user);
+    void insertArea(Area area);
 }
