@@ -163,4 +163,35 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         areaMapper.deleteBatchIds(ids);
     }
 
+
+    /**
+     * 根据ID删除区域
+     * @param id 区域ID
+     */
+    @Override
+    public void deleteById(Integer id) {
+        // 根据ID查询区域
+        Area area = areaMapper.selectById(id);
+
+        // 如果区域不存在，则抛出区域不存在异常
+        if (area == null) {
+            throw new AccountLockedException(MessageConstant.AREA_NOT_FOUND);
+        }
+
+        // 检查区域是否关联有车位
+        if(carportService.getByAreaId(id) != null){
+            throw new AccountLockedException(MessageConstant.AREA_EXISTS_CARPORT);
+        }
+
+        // 更新区域的更新时间和更新用户
+        area.setUpdateTime(LocalDateTime.now());
+        area.setUpdateUser(BaseContext.getCurrentId());
+
+        // 更新区域信息
+        areaMapper.updateById(area);
+
+        // 删除区域
+        areaMapper.deleteById(id);
+    }
+
 }
