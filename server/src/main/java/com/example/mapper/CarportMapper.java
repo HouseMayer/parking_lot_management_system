@@ -19,5 +19,8 @@ import java.util.List;
 public interface CarportMapper extends BaseMapper<Carport> {
 
     @Select("select * from carport where area = #{areaId}")
-    List<Carport> getByAreaId(int areaId);
+    List<Carport> getByAreaId(Long areaId);
+
+    @Select("select count(*) from carport where area = #{areaId}")
+    Integer countByAreaId(Integer areaId);
 }
