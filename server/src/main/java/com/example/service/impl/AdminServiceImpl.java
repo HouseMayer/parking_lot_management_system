@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constant.JwtClaimsConstant;
 import com.example.constant.MessageConstant;
 import com.example.constant.PasswordConstant;
-import com.example.constant.StatusConstant;
 import com.example.context.BaseContext;
 import com.example.dto.AdminDTO;
 import com.example.dto.AdminLoginDTO;
@@ -195,9 +194,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         for (Long id : ids) {
             // 根据管理员id获取管理员对象
             Admin admin = adminMapper.getById(id);
-
-            // 设置管理员为禁用状态
-            admin.setDeleted(StatusConstant.DISENABLE);
             // 设置管理员更新时间为当前时间
             admin.setUpdateTime(LocalDateTime.now());
             // 设置管理员更新用户为当前用户
