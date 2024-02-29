@@ -12,6 +12,8 @@ public class MessageConstant {
 
     public static final String AREA_NOT_FOUND = "区域不存在";
     public static final String  AREA_ALREADY_EXISTS = "区域名已存在";
+    public static final String  AREA_EXISTS_CARPORT = "该区域内还有车位存在";
+
     public static final String UNKNOWN_ERROR = "未知错误";
     public static final String ALREADT_EXISTS = "已存在";
     public static final String USER_NOT_LOGIN = "用户未登录";
