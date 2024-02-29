@@ -10,7 +10,7 @@ import com.example.constant.PasswordConstant;
 import com.example.context.BaseContext;
 import com.example.dto.AdminDTO;
 import com.example.dto.AdminLoginDTO;
-import com.example.dto.AdminPageQueryDTO;
+import com.example.dto.PageQueryDTO;
 import com.example.entity.Admin;
 import com.example.entity.User;
 import com.example.exception.AccountNotFoundException;
@@ -56,21 +56,21 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     /**
      * 分页查询方法
      *
-     * @param adminPageQueryDTO 用户分页查询DTO对象
+     * @param pageQueryDTO 用户分页查询DTO对象
      * @return 分页查询结果PageResult对象
      */
     @Override
-    public PageResult pageQuery(AdminPageQueryDTO adminPageQueryDTO) {
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
 
         // 如果参数为空，则抛出运行时异常
-        if (adminPageQueryDTO == null) {
+        if (pageQueryDTO == null) {
             throw new RuntimeException("参数不能为空");
         }
 
         // 获取当前页面、每页数量和名称
-        int currentPage = adminPageQueryDTO.getPage();
-        int pageSize = adminPageQueryDTO.getPageSize();
-        String name = adminPageQueryDTO.getKeyword();
+        int currentPage = pageQueryDTO.getPage();
+        int pageSize = pageQueryDTO.getPageSize();
+        String name = pageQueryDTO.getKeyword();
         log.info("当前页面："+currentPage);
         log.info("每页数量："+pageSize);
         log.info("名称："+name);
@@ -232,14 +232,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         roles.add(role);
 
         // 构建并返回AdminInfoVO对象
-        AdminInfoVO adminInfoVO = AdminInfoVO.builder()
+        return AdminInfoVO.builder()
                 .avatar(admin.getAvatar())
                 .introduction(admin.getIntroduction())
                 .name(admin.getName())
                 .roles(roles)
                 .build();
-
-        return adminInfoVO;
     }
 
 

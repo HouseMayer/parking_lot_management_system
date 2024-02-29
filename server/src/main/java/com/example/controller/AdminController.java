@@ -6,11 +6,10 @@ import com.example.constant.MessageConstant;
 import com.example.context.BaseContext;
 import com.example.dto.AdminDTO;
 import com.example.dto.AdminLoginDTO;
-import com.example.dto.AdminPageQueryDTO;
+import com.example.dto.PageQueryDTO;
 import com.example.entity.Admin;
 import com.example.exception.AccountLockedException;
 import com.example.mapper.AdminMapper;
-import com.example.mapper.RoleMapper;
 import com.example.properties.JwtProperties;
 import com.example.result.PageResult;
 import com.example.result.Result;
@@ -19,9 +18,9 @@ import com.example.utils.JwtUtil;
 import com.example.vo.AdminInfoVO;
 import com.example.vo.AdminLoginVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -41,26 +40,24 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-    @Autowired
+    @Resource
     private IAdminService adminService;
-    @Autowired
+    @Resource
     private AdminMapper adminMapper;
-    @Autowired
+    @Resource
     private JwtProperties jwtProperties;
-    @Autowired
-    private RoleMapper roleMapper;
 
 
     /**
      * 根据用户分页查询条件获取页面数据
      *
-     * @param adminPageQueryDTO 用户分页查询DTO对象
+     * @param pageQueryDTO 用户分页查询DTO对象
      * @return 结果对象，包含分页结果数据
      */
     @GetMapping("/page")
-    public Result<PageResult> list(AdminPageQueryDTO adminPageQueryDTO) {
+    public Result<PageResult> list(PageQueryDTO pageQueryDTO) {
 
-        PageResult pageResult = adminService.pageQuery(adminPageQueryDTO);
+        PageResult pageResult = adminService.pageQuery(pageQueryDTO);
 
         return Result.success(pageResult);
     }
@@ -91,8 +88,6 @@ public class AdminController {
         log.info("员工登录：{}", adminLoginDTO);
 
         Admin admin = adminService.login(adminLoginDTO);
-
-        String role = roleMapper.getById(admin.getRole());
 
         // 登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();

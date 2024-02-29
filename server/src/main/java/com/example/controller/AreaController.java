@@ -1,21 +1,15 @@
 package com.example.controller;
 
-
-import com.example.constant.MessageConstant;
-import com.example.context.BaseContext;
 import com.example.dto.AreaDTO;
-import com.example.dto.AreaPageQueryDTO;
+import com.example.dto.PageQueryDTO;
 import com.example.entity.Area;
-import com.example.exception.AccountLockedException;
-import com.example.mapper.AreaMapper;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IAreaService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -32,22 +26,21 @@ import java.util.List;
 @RequestMapping("/area")
 public class AreaController {
 
-    @Autowired
+    @Resource
     private IAreaService areaService;
 
-    @Autowired
-    private AreaMapper areaMapper;
+
 
     /**
      * 分页查询区域列表
-     * @param areaPageQueryDTO 区域查询参数
+     * @param pageQueryDTO 区域查询参数
      * @return 分页查询结果
      */
     @GetMapping("/page")
-    public Result<PageResult> list(AreaPageQueryDTO areaPageQueryDTO) {
+    public Result<PageResult> list(PageQueryDTO pageQueryDTO) {
 
         // 调用服务层的分页查询方法
-        PageResult pageResult = areaService.pageQuery(areaPageQueryDTO);
+        PageResult pageResult = areaService.pageQuery(pageQueryDTO);
 
         // 返回查询结果
         return Result.success(pageResult);

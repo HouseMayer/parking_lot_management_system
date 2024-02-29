@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constant.MessageConstant;
 import com.example.context.BaseContext;
 import com.example.dto.AreaDTO;
-import com.example.dto.AreaPageQueryDTO;
+import com.example.dto.PageQueryDTO;
 import com.example.entity.Area;
 import com.example.entity.Carport;
 import com.example.entity.User;
@@ -17,7 +17,6 @@ import com.example.mapper.AreaMapper;
 import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
 import com.example.service.IAreaService;
-import com.example.service.ICarportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -42,27 +41,24 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
     private AreaMapper areaMapper;
 
     @Resource
-    private ICarportService carportService;
-
-    @Resource
     private CarportMapper carportMapper;
     /**
      * 分页查询区域信息
-     * @param areaPageQueryDTO 区域分页查询参数
+     * @param PageQueryDTO 区域分页查询参数
      * @return 分页查询结果
      */
     @Override
-    public PageResult pageQuery(AreaPageQueryDTO areaPageQueryDTO) {
+    public PageResult pageQuery(PageQueryDTO PageQueryDTO) {
 
         // 如果参数为空，则抛出运行时异常
-        if (areaPageQueryDTO == null) {
+        if (PageQueryDTO == null) {
             throw new RuntimeException("参数不能为空");
         }
 
         // 获取当前页面、每页数量和名称
-        int currentPage = areaPageQueryDTO.getPage();
-        int pageSize = areaPageQueryDTO.getPageSize();
-        String name = areaPageQueryDTO.getKeyword();
+        int currentPage = PageQueryDTO.getPage();
+        int pageSize = PageQueryDTO.getPageSize();
+        String name = PageQueryDTO.getKeyword();
         log.info("当前页面："+currentPage);
         log.info("每页数量："+pageSize);
         log.info("名称："+name);
@@ -142,7 +138,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         // 遍历管理员id列表
         for (Long id : ids) {
             // 检查管理员id对应的区域是否存在
-            if(carportService.getByAreaId(Math.toIntExact(id)) != null){
+            if(carportMapper.getByAreaId(Math.toIntExact(id)) != null){
                 throw new AccountLockedException(MessageConstant.AREA_EXISTS_CARPORT);
             }
 
@@ -179,7 +175,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         }
 
         // 检查区域是否关联有车位
-        if(carportService.getByAreaId(id) != null){
+        if(carportMapper.getByAreaId(id) != null){
             throw new AccountLockedException(MessageConstant.AREA_EXISTS_CARPORT);
         }
 

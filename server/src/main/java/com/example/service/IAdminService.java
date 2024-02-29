@@ -3,7 +3,7 @@ package com.example.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dto.AdminDTO;
 import com.example.dto.AdminLoginDTO;
-import com.example.dto.AdminPageQueryDTO;
+import com.example.dto.PageQueryDTO;
 import com.example.entity.Admin;
 import com.example.result.PageResult;
 import com.example.vo.AdminInfoVO;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public interface IAdminService extends IService<Admin> {
 
-    PageResult pageQuery(AdminPageQueryDTO adminPageQueryDTO);
+    PageResult pageQuery(PageQueryDTO pageQueryDTO);
 
     Admin login(AdminLoginDTO adminLoginDTO);
 
