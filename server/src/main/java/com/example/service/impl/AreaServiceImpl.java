@@ -115,7 +115,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
                 throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
             }
             area.setName(areaDTO.getName());
-            List<Carport> carportList = carportMapper.getByAreaId(Math.toIntExact(id));
+            List<Carport> carportList = carportMapper.getByAreaId(id);
             carportList.forEach( en -> {
                 en.setArea(areaDTO.getName());
                 carportMapper.updateById(en);
@@ -133,7 +133,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         // 遍历管理员id列表
         for (Long id : ids) {
             // 检查管理员id对应的区域是否存在
-            if(carportMapper.getByAreaId(Math.toIntExact(id)) != null){
+            if(carportMapper.getByAreaId(id) != null){
                 throw new AccountLockedException(MessageConstant.AREA_EXISTS_CARPORT);
             }
 
@@ -170,7 +170,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         }
 
         // 检查区域是否关联有车位
-        if(carportMapper.getByAreaId(id) != null){
+        if(carportMapper.countByAreaId(id) > 0){
             throw new AccountLockedException(MessageConstant.AREA_EXISTS_CARPORT);
         }
 
