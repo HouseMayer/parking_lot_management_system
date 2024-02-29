@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -115,6 +116,22 @@ public class AreaController {
 
         // 删除区域
         areaMapper.deleteById(id);
+
+        // 返回删除成功的结果
+        return Result.success();
+    }
+
+
+    /**
+     * 批量删除
+     * @param ids 要删除的id列表
+     * @return 删除结果
+     */
+    @DeleteMapping("/deletebatch")
+    public Result deleteBatch(@RequestBody List<Long> ids){
+
+        // 调用服务层的批量删除方法
+        areaService.deleteBatch(ids);
 
         // 返回删除成功的结果
         return Result.success();

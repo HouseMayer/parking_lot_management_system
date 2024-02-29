@@ -6,6 +6,8 @@ import com.example.dto.AreaPageQueryDTO;
 import com.example.entity.Area;
 import com.example.result.PageResult;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -21,4 +23,6 @@ public interface IAreaService extends IService<Area> {
     void save(AreaDTO areaDTO);
 
     void update(AreaDTO areaDTO);
+
+    void deleteBatch(List<Long> ids);
 }

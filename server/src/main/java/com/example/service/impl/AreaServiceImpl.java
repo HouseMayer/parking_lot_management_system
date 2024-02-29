@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constant.MessageConstant;
+import com.example.context.BaseContext;
 import com.example.dto.AreaDTO;
 import com.example.dto.AreaPageQueryDTO;
 import com.example.entity.Area;
@@ -17,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -112,5 +116,25 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
             area.setName(areaDTO.getName());
             areaMapper.updateById(area);
         }
+    }
+
+    @Override
+    public void deleteBatch(List<Long> ids) {
+        // 遍历管理员id列表
+        for (Long id : ids) {
+            // 根据管理员id获取管理员对象
+            Area area = this.getById(id);
+            System.out.println(area);
+            // 设置管理员更新时间为当前时间
+            area.setUpdateTime(LocalDateTime.now());
+            // 设置管理员更新用户为当前用户
+            area.setUpdateUser(BaseContext.getCurrentId());
+
+            // 更新管理员对象
+            areaMapper.updateById(area);
+        }
+
+        // 执行批量删除操作
+        areaMapper.deleteBatchIds(ids);
     }
 }
