@@ -28,4 +28,6 @@ public interface IAreaService extends IService<Area> {
 
     @Transactional
     void deleteBatch(List<Long> ids);
+
+    void deleteById(Integer id);
 }
