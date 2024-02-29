@@ -111,7 +111,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         Area area = this.getById(id);
         // 检查区域名是否已存在
         if (!areaDTO.getName().equals(area.getName())){
-            if (areaMapper.getByAreaName(area.getName()) != null ){
+            if (areaMapper.getByAreaName(areaDTO.getName()) != null ){
                 throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
             }
             area.setName(areaDTO.getName());
