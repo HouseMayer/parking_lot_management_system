@@ -36,18 +36,6 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("jwt校验开始");
-// 假设 request 是 HttpServletRequest 类型的对象
-        Enumeration<String> headerNames = request.getHeaderNames();
-
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            System.out.println("Header Name: " + headerName);
-            // 如果还需要打印对应的值，可以用 getHeader() 方法获取
-            System.out.println("Value: " + request.getHeader(headerName));
-        }
-
-
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
             //当前拦截到的不是动态方法，直接放行
