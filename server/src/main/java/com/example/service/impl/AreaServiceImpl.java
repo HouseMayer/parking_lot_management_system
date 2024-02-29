@@ -9,16 +9,20 @@ import com.example.context.BaseContext;
 import com.example.dto.AreaDTO;
 import com.example.dto.AreaPageQueryDTO;
 import com.example.entity.Area;
+import com.example.entity.Carport;
 import com.example.entity.User;
+import com.example.exception.AccountLockedException;
 import com.example.exception.LoginException;
 import com.example.mapper.AreaMapper;
+import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
 import com.example.service.IAreaService;
+import com.example.service.ICarportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,8 +38,14 @@ import java.util.List;
 @Service
 public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IAreaService {
 
-    @Autowired
+    @Resource
     private AreaMapper areaMapper;
+
+    @Resource
+    private ICarportService carportService;
+
+    @Resource
+    private CarportMapper carportMapper;
     /**
      * 分页查询区域信息
      * @param areaPageQueryDTO 区域分页查询参数
@@ -92,7 +102,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         BeanUtils.copyProperties(areaDTO, area);
 
         // 检查区域名是否已存在
-        if (areaMapper.getByUserName(area.getName()) != null ){
+        if (areaMapper.getByAreaName(area.getName()) != null ){
             throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
         }
 
@@ -110,21 +120,36 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         Area area = this.getById(id);
         // 检查区域名是否已存在
         if (!areaDTO.getName().equals(area.getName())){
-            if (areaMapper.getByUserName(area.getName()) != null ){
+            if (areaMapper.getByAreaName(area.getName()) != null ){
                 throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
             }
             area.setName(areaDTO.getName());
+            List<Carport> carportList = carportMapper.getByAreaId(Math.toIntExact(id));
+            carportList.forEach( en -> {
+                en.setArea(areaDTO.getName());
+                carportMapper.updateById(en);
+            });
             areaMapper.updateById(area);
         }
     }
 
+    /**
+     * 批量删除管理员
+     * @param ids 管理员id列表
+     */
     @Override
     public void deleteBatch(List<Long> ids) {
         // 遍历管理员id列表
         for (Long id : ids) {
+            // 检查管理员id对应的区域是否存在
+            if(carportService.getByAreaId(Math.toIntExact(id)) != null){
+                throw new AccountLockedException(MessageConstant.AREA_EXISTS_CARPORT);
+            }
+
             // 根据管理员id获取管理员对象
             Area area = this.getById(id);
             System.out.println(area);
+
             // 设置管理员更新时间为当前时间
             area.setUpdateTime(LocalDateTime.now());
             // 设置管理员更新用户为当前用户
@@ -137,4 +162,5 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         // 执行批量删除操作
         areaMapper.deleteBatchIds(ids);
     }
+
 }

@@ -5,6 +5,7 @@ import com.example.dto.AreaDTO;
 import com.example.dto.AreaPageQueryDTO;
 import com.example.entity.Area;
 import com.example.result.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +23,9 @@ public interface IAreaService extends IService<Area> {
 
     void save(AreaDTO areaDTO);
 
+    @Transactional
     void update(AreaDTO areaDTO);
 
+    @Transactional
     void deleteBatch(List<Long> ids);
 }

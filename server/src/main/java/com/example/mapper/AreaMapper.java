@@ -19,7 +19,7 @@ import org.apache.ibatis.annotations.Select;
 public interface AreaMapper extends BaseMapper<Area> {
 
     @Select("select * from area where name = #{name}")
-    Area getByUserName(String name);
+    Area getByAreaName(String name);
 
     @Insert("insert into area(name,deleted,update_time,update_user,create_time,create_user) " +
             "values" +
