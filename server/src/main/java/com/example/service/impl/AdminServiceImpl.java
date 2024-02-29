@@ -66,21 +66,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         if (pageQueryDTO == null) {
             throw new RuntimeException("参数不能为空");
         }
-
         // 获取当前页面、每页数量和名称
         int currentPage = pageQueryDTO.getPage();
         int pageSize = pageQueryDTO.getPageSize();
         String name = pageQueryDTO.getKeyword();
-        log.info("当前页面："+currentPage);
-        log.info("每页数量："+pageSize);
-        log.info("名称："+name);
-
         // 创建查询条件封装对象，并根据名称进行模糊查询
         QueryWrapper<Admin> wrapper = new QueryWrapper<Admin>().like("name", name);
-
         // 创建分页对象
         IPage<Admin> page = new Page<>(currentPage, pageSize);
-
         // 执行查询，并获取查询结果列表
         IPage<Admin> pageRes = adminMapper.selectPage(page, wrapper);
         for (Admin record : pageRes.getRecords()) {

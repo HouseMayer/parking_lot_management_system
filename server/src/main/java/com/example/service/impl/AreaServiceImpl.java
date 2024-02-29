@@ -44,25 +44,20 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
     private CarportMapper carportMapper;
     /**
      * 分页查询区域信息
-     * @param PageQueryDTO 区域分页查询参数
+     * @param pageQueryDTO 区域分页查询参数
      * @return 分页查询结果
      */
     @Override
-    public PageResult pageQuery(PageQueryDTO PageQueryDTO) {
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
 
         // 如果参数为空，则抛出运行时异常
-        if (PageQueryDTO == null) {
+        if (pageQueryDTO == null) {
             throw new RuntimeException("参数不能为空");
         }
-
         // 获取当前页面、每页数量和名称
-        int currentPage = PageQueryDTO.getPage();
-        int pageSize = PageQueryDTO.getPageSize();
-        String name = PageQueryDTO.getKeyword();
-        log.info("当前页面："+currentPage);
-        log.info("每页数量："+pageSize);
-        log.info("名称："+name);
-
+        int currentPage = pageQueryDTO.getPage();
+        int pageSize = pageQueryDTO.getPageSize();
+        String name = pageQueryDTO.getKeyword();
         // 创建查询条件封装对象，并根据名称进行模糊查询
         QueryWrapper<Area> wrapper = new QueryWrapper<Area>().like("name", name);
 
