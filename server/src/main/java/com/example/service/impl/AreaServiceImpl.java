@@ -120,28 +120,31 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
     }
 
     /**
-     * 批量删除管理员
-     * @param ids 管理员id列表
+     * 批量删除区域
+     * @param ids id列表
      */
     @Override
     public void deleteBatch(List<Long> ids) {
-        // 遍历管理员id列表
+        // 遍历id列表
         for (Long id : ids) {
-            // 检查管理员id对应的区域是否存在
-            if(carportMapper.getByAreaId(id) != null){
+            // 根据ID查询区域
+            Area area = this.getById(id);
+            // 如果区域不存在，则抛出区域不存在异常
+            if (area == null) {
+                throw new AccountLockedException(MessageConstant.AREA_NOT_FOUND);
+            }
+
+            // 检查区域是否关联有车位
+            if(carportMapper.countByAreaId(Math.toIntExact(id)) > 0){
                 throw new AccountLockedException(MessageConstant.AREA_EXISTS_CARPORT);
             }
 
-            // 根据管理员id获取管理员对象
-            Area area = this.getById(id);
-            System.out.println(area);
-
-            // 设置管理员更新时间为当前时间
+            // 设置更新时间为当前时间
             area.setUpdateTime(LocalDateTime.now());
-            // 设置管理员更新用户为当前用户
+            // 设置更新用户为当前用户
             area.setUpdateUser(BaseContext.getCurrentId());
 
-            // 更新管理员对象
+            // 更新区域对象
             areaMapper.updateById(area);
         }
 
