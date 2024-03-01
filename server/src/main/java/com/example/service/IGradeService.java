@@ -1,7 +1,9 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dto.PageQueryDTO;
 import com.example.entity.Grade;
+import com.example.result.PageResult;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.example.entity.Grade;
  */
 public interface IGradeService extends IService<Grade> {
 
+    PageResult pageQuery(PageQueryDTO pageQueryDTO);
 }
