@@ -87,7 +87,7 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
 
         // 检查车位名是否已存在
         if (carportMapper.getByCarport(carport.getCarport()) != null ){
-            throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+            throw new LoginException(MessageConstant.CARPORT_ALREADY_EXISTS);
         }
 
         carport.setDeleted(0);
@@ -106,7 +106,7 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
         // 判断车位是否已经存在
         if (!carportDTO.getCarport().equals(carport.getCarport())){
             if (carportMapper.getByCarport(carportDTO.getCarport()) != null) {
-                throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+                throw new LoginException(MessageConstant.CARPORT_ALREADY_EXISTS);
             }
         }
         // 更新车位信息
