@@ -27,11 +27,19 @@ public class CarportController {
     @Resource
     private ICarportService carportService;
 
+    /**
+     * 获取分页数据
+     *
+     * @param pageQueryDTO 分页查询参数
+     * @return 分页结果
+     */
     @GetMapping("/page")
     public Result<PageResult> list(PageQueryDTO pageQueryDTO) {
 
+        // 调用服务层的分页查询方法
         PageResult pageResult = carportService.pageQuery(pageQueryDTO);
 
+        // 返回成功结果
         return Result.success(pageResult);
     }
 }

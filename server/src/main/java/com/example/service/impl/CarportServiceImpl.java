@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dto.PageQueryDTO;
-import com.example.entity.Area;
 import com.example.entity.Carport;
 import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
@@ -29,6 +28,13 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
 
     @Resource
     private CarportMapper carportMapper;
+
+
+    /**
+     * 分页查询
+     * @param pageQueryDTO 分页查询参数
+     * @return 分页查询结果
+     */
     @Override
     public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
         // 如果参数为空，则抛出运行时异常
