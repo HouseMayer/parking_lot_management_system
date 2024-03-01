@@ -20,4 +20,6 @@ public interface ICarportService extends IService<Carport> {
     PageResult pageQuery(PageQueryDTO pageQueryDTO);
 
     void save(CarportDTO carportDTO);
+
+    void update(CarportDTO carportDTO);
 }

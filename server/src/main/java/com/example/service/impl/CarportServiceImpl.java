@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constant.MessageConstant;
+import com.example.context.BaseContext;
 import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Carport;
@@ -17,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -91,5 +93,27 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
         carport.setDeleted(0);
         carportMapper.insertCarport(carport);
 
+    }
+
+    /**
+     * 更新车场信息
+     * @param carportDTO 车场DTO对象
+     */
+    @Override
+    public void update(CarportDTO carportDTO) {
+        Long id = carportDTO.getId();
+        Carport carport = this.getById(id);
+        // 判断车位是否已经存在
+        if (!carportDTO.getCarport().equals(carport.getCarport())){
+            if (carportMapper.getByCarport(carportDTO.getCarport()) != null) {
+                throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+            }
+        }
+        // 更新车位信息
+        BeanUtils.copyProperties(carportDTO, carport);
+
+        carport.setUpdateTime(LocalDateTime.now());
+        carport.setUpdateUser(BaseContext.getCurrentId());
+        carportMapper.updateById(carport);
     }
 }

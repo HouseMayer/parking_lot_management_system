@@ -70,6 +70,21 @@ public class CarportController {
         return Result.success();
     }
 
+    /**
+     * 更新车位信息
+     * @param carportDTO 车位信息
+     * @return 更新结果
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody CarportDTO carportDTO) {
+    
+        // 调用服务层更新车位信息
+        carportService.update(carportDTO);
+    
+        // 返回更新结果
+        return Result.success();
+    }
+
 
 
 }
