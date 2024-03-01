@@ -52,10 +52,10 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
         // 获取当前页面、每页数量和名称
         int currentPage = pageQueryDTO.getPage();
         int pageSize = pageQueryDTO.getPageSize();
-        String name = pageQueryDTO.getKeyword();
+        String carport = pageQueryDTO.getKeyword();
 
         // 创建查询条件封装对象，并根据名称进行模糊查询
-        QueryWrapper<Carport> wrapper = new QueryWrapper<Carport>().like("name", name);
+        QueryWrapper<Carport> wrapper = new QueryWrapper<Carport>().like("carport", carport);
 
         // 创建分页对象
         IPage<Carport> page = new Page<>(currentPage, pageSize);
