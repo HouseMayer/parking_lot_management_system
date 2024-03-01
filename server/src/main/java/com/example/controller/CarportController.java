@@ -2,10 +2,12 @@ package com.example.controller;
 
 
 import com.example.dto.PageQueryDTO;
+import com.example.entity.Carport;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.ICarportService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +44,21 @@ public class CarportController {
         // 返回成功结果
         return Result.success(pageResult);
     }
+
+
+
+    /**
+     * 根据id获取Carport对象
+     * @param id Carport对象的id
+     * @return 返回包含Carport对象的Result对象
+     */
+    @GetMapping("/{id}")
+    public Result<Carport> getById(@PathVariable Integer id) {
+        Carport carport = carportService.getById(id);
+        return Result.success(carport);
+    }
+
+
+
 }
 
