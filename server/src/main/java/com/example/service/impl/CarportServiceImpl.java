@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -115,5 +116,26 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
         carport.setUpdateTime(LocalDateTime.now());
         carport.setUpdateUser(BaseContext.getCurrentId());
         carportMapper.updateById(carport);
+    }
+
+    /**
+     * 批量删除车位
+     * @param ids 要删除的车位ID列表
+     */
+    @Override
+    public void deleteBatch(List<Long> ids) {
+
+        // 遍历要删除的车辆泊位ID列表
+        for (Long id : ids) {
+            Carport carport = this.getById(id);
+            carport.setUpdateTime(LocalDateTime.now());
+            carport.setUpdateUser(BaseContext.getCurrentId());
+
+            // 更新车辆泊位信息
+            carportMapper.updateById(carport);
+        }
+
+        // 执行批量删除操作
+        carportMapper.deleteBatchIds(ids);
     }
 }

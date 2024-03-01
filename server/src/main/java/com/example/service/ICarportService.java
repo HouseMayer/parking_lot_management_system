@@ -5,6 +5,9 @@ import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Carport;
 import com.example.result.PageResult;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 /**
@@ -22,4 +25,7 @@ public interface ICarportService extends IService<Carport> {
     void save(CarportDTO carportDTO);
 
     void update(CarportDTO carportDTO);
+
+    @Transactional
+    void deleteBatch(List<Long> ids);
 }

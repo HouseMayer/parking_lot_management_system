@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -119,6 +120,20 @@ public class CarportController {
         carportMapper.deleteById(id);
 
         // 返回删除成功的结果
+        return Result.success();
+    }
+
+
+    /**
+     * 批量删除
+     * @param ids 要删除的ID列表
+     * @return 删除结果
+     */
+    @DeleteMapping("/deletebatch")
+    public Result deleteBatch(@RequestBody List<Long> ids){
+
+        carportService.deleteBatch(ids);
+
         return Result.success();
     }
 
