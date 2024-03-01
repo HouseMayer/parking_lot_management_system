@@ -47,6 +47,20 @@ public class AreaController {
     }
 
     /**
+     * 查询所有区域信息
+     *
+     * @return 查询结果
+     */
+    @GetMapping("/queryAll")
+    public Result<List<Area>> queryAll() {
+        // 调用服务层查询所有区域信息
+        List<Area> areaList = areaService.list();
+        // 返回查询结果
+        return Result.success(areaList);
+    }
+
+
+    /**
      * 根据id获取区域信息
      * @param id 区域id
      * @return 区域信息
