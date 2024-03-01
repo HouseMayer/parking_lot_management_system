@@ -90,9 +90,9 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
         // 对象属性拷贝
         BeanUtils.copyProperties(gradeDTO, grade);
 
-        // 检查用户名是否已存在
+        // 检查车牌是否已存在
         if (gradeMapper.getLicensePlate(grade.getLicensePlate()) != null ){
-            throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+            throw new LoginException(MessageConstant.LICENSE_PLATE_ALREADY_EXISTS);
         }
 
         grade.setDeleted(0);

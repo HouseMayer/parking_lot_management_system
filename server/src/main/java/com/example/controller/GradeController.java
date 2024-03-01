@@ -55,8 +55,8 @@ public class GradeController {
     }
 
     /**
-     * 保存年级信息
-     * @param gradeDTO 年级信息
+     * 保存VIP信息
+     * @param gradeDTO VIP信息
      * @return 保存结果
      */
     @PostMapping("/save")
