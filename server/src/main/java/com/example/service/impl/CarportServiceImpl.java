@@ -11,6 +11,7 @@ import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Carport;
 import com.example.exception.LoginException;
+import com.example.mapper.AreaMapper;
 import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
 import com.example.service.ICarportService;
@@ -37,6 +38,8 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
     @Resource
     private CarportMapper carportMapper;
 
+    @Resource
+    private AreaMapper areaMapper;
 
     /**
      * 分页查询
@@ -65,10 +68,19 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
         IPage<Carport> pageRes = carportMapper.selectPage(page, wrapper);
         //将数据库内数字转换为意义内容
         pageRes.getRecords().forEach( en -> {
+
+            en.setArea(areaMapper.getNameById(en.getArea()));
+
             if ("1".equals(en.getType())) {
                 en.setType(CarportConstant.OPEN_PARKING_SPACE);
             } else if ("2".equals(en.getType())) {
                 en.setType(CarportConstant.INDOOR_PARKING_SPACE);
+            }
+
+            if ("1".equals(en.getClassify())) {
+                en.setClassify(CarportConstant.FIXED_PARKING_SPACE);
+            } else if ("2".equals(en.getClassify())) {
+                en.setClassify(CarportConstant.TEMPORARY_PARKING_SPACE);
             }
 
             if ("1".equals(en.getState())) {
@@ -77,12 +89,6 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
                 en.setState(CarportConstant.OCCUPANCY_STATE);
             } else if ("3".equals(en.getState())) {
                 en.setState(CarportConstant.MAINTENANCE_STATE);
-            }
-
-            if ("1".equals(en.getClassify())) {
-                en.setClassify(CarportConstant.FIXED_PARKING_SPACE);
-            } else if ("2".equals(en.getClassify())) {
-                en.setClassify(CarportConstant.TEMPORARY_PARKING_SPACE);
             }
         });
         // 创建分页查询结果对象
