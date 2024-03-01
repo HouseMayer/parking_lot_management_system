@@ -25,4 +25,7 @@ public interface AreaMapper extends BaseMapper<Area> {
             "values" +
             "(#{name},#{deleted},#{updateTime},#{updateUser},#{createTime},#{createUser})")
     void insertArea(Area area);
+
+    @Select("select name from area where id = #{area}")
+    String getNameById(String area);
 }
