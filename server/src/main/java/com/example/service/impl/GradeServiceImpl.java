@@ -4,13 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.constant.MessageConstant;
 import com.example.constant.StateConstant;
+import com.example.dto.GradeDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Grade;
+import com.example.exception.LoginException;
 import com.example.mapper.GradeMapper;
 import com.example.result.PageResult;
 import com.example.service.IGradeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -73,6 +77,26 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
 
         // 返回分页查询结果
         return pageResult;
+    }
+
+    /**
+     * 保存GradeDTO对象
+     * @param gradeDTO 要保存的对象
+     */
+    @Override
+    public void save(GradeDTO gradeDTO) {
+        Grade grade = new Grade();
+
+        // 对象属性拷贝
+        BeanUtils.copyProperties(gradeDTO, grade);
+
+        // 检查用户名是否已存在
+        if (gradeMapper.getLicensePlate(grade.getLicensePlate()) != null ){
+            throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+        }
+
+        grade.setDeleted(0);
+        gradeMapper.insertGrade(grade);
     }
 
 }

@@ -1,16 +1,14 @@
 package com.example.controller;
 
 
+import com.example.dto.GradeDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Admin;
 import com.example.entity.Grade;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IGradeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -55,6 +53,21 @@ public class GradeController {
         Grade grade = gradeService.getById(id);
         return Result.success(grade);
     }
+
+    /**
+     * 保存年级信息
+     * @param gradeDTO 年级信息
+     * @return 保存结果
+     */
+    @PostMapping("/save")
+    public Result save(@RequestBody GradeDTO gradeDTO) {
+
+        gradeService.save(gradeDTO);
+
+        return Result.success();
+    }
+
+
 
 
 }
