@@ -1,15 +1,20 @@
 package com.example.controller;
 
 
+import com.example.constant.MessageConstant;
+import com.example.context.BaseContext;
 import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Carport;
+import com.example.exception.AccountLockedException;
+import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.ICarportService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -26,6 +31,9 @@ public class CarportController {
 
     @Resource
     private ICarportService carportService;
+
+    @Resource
+    private CarportMapper carportMapper;
 
     /**
      * 获取分页数据
@@ -85,7 +93,34 @@ public class CarportController {
         return Result.success();
     }
 
+    /**
+     * 根据ID删除车场
+     * @param id 车场ID
+     * @return 删除结果
+     */
+    @DeleteMapping("/{id}")
+    public Result deleteById(@PathVariable Integer id) {
+        // 根据ID查询车场
+        Carport carport = carportMapper.selectById(id);
 
+        // 如果车场不存在，则抛出异常
+        if (carport == null) {
+            throw new AccountLockedException(MessageConstant.CARPORT_NOT_FOUND);
+        }
+
+        // 更新车场的更新时间和更新用户
+        carport.setUpdateTime(LocalDateTime.now());
+        carport.setUpdateUser(BaseContext.getCurrentId());
+
+        // 更新车场信息
+        carportMapper.updateById(carport);
+
+        // 删除车场
+        carportMapper.deleteById(id);
+
+        // 返回删除成功的结果
+        return Result.success();
+    }
 
 }
 
