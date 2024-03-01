@@ -1,16 +1,21 @@
 package com.example.controller;
 
 
+import com.example.constant.MessageConstant;
+import com.example.context.BaseContext;
 import com.example.dto.GradeDTO;
 import com.example.dto.PageQueryDTO;
-import com.example.entity.Admin;
 import com.example.entity.Grade;
+import com.example.exception.AccountLockedException;
+import com.example.mapper.GradeMapper;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IGradeService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -27,6 +32,9 @@ public class GradeController {
 
     @Resource
     private IGradeService gradeService;
+
+    @Resource
+    private GradeMapper gradeMapper;
 
     /**
      * 分页查询
@@ -67,7 +75,35 @@ public class GradeController {
         return Result.success();
     }
 
+    /**
+     * 根据ID删除记录
+     * @param id ID
+     * @return 删除结果
+     */
+    @DeleteMapping("/{id}")
+    @Transactional
+    public Result deleteById(@PathVariable Integer id) {
+        // 根据ID查询记录
+        Grade grade = gradeMapper.selectById(id);
 
+        // 如果记录为空，则抛出异常
+        if (grade == null) {
+            throw new AccountLockedException(MessageConstant.LICENSE_PLATE_NOT_FOUND);
+        }
+
+        // 更新记录的更新时间和更新用户
+        grade.setUpdateTime(LocalDateTime.now());
+        grade.setUpdateUser(BaseContext.getCurrentId());
+
+        // 更新记录
+        gradeMapper.updateById(grade);
+
+        // 删除记录
+        gradeMapper.deleteById(id);
+
+        // 返回删除成功的结果
+        return Result.success();
+    }
 
 
 }
