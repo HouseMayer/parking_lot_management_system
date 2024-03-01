@@ -11,6 +11,7 @@ import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.ICarportService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -100,6 +101,7 @@ public class CarportController {
      * @return 删除结果
      */
     @DeleteMapping("/{id}")
+    @Transactional
     public Result deleteById(@PathVariable Integer id) {
         // 根据ID查询车场
         Carport carport = carportMapper.selectById(id);

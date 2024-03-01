@@ -7,6 +7,7 @@ import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IAreaService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -105,6 +106,7 @@ public class AreaController {
      * @return 删除结果
      */
     @DeleteMapping("/{id}")
+    @Transactional
     public Result deleteById(@PathVariable Integer id) {
 
         areaService.deleteById(id);

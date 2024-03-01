@@ -18,6 +18,7 @@ import com.example.utils.JwtUtil;
 import com.example.vo.AdminInfoVO;
 import com.example.vo.AdminLoginVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -155,6 +156,7 @@ public class AdminController {
      * @return 操作结果
      */
     @DeleteMapping("/{id}")
+    @Transactional
     public Result deleteById(@PathVariable Integer id) {
         Admin admin = adminMapper.selectById(id);
 
