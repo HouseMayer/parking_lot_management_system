@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.constant.CarportConstant;
 import com.example.constant.MessageConstant;
 import com.example.context.BaseContext;
 import com.example.dto.CarportDTO;
@@ -62,7 +63,28 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
 
         // 执行查询，并获取查询结果列表
         IPage<Carport> pageRes = carportMapper.selectPage(page, wrapper);
+        //将数据库内数字转换为意义内容
+        pageRes.getRecords().forEach( en -> {
+            if ("1".equals(en.getType())) {
+                en.setType(CarportConstant.OPEN_PARKING_SPACE);
+            } else if ("2".equals(en.getType())) {
+                en.setType(CarportConstant.INDOOR_PARKING_SPACE);
+            }
 
+            if ("1".equals(en.getState())) {
+                en.setState(CarportConstant.IDLE_STATE);
+            } else if ("2".equals(en.getState())) {
+                en.setState(CarportConstant.OCCUPANCY_STATE);
+            } else if ("3".equals(en.getState())) {
+                en.setState(CarportConstant.MAINTENANCE_STATE);
+            }
+
+            if ("1".equals(en.getClassify())) {
+                en.setClassify(CarportConstant.FIXED_PARKING_SPACE);
+            } else if ("2".equals(en.getClassify())) {
+                en.setClassify(CarportConstant.TEMPORARY_PARKING_SPACE);
+            }
+        });
         // 创建分页查询结果对象
         PageResult pageResult = new PageResult();
 
