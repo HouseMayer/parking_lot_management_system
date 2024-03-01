@@ -2,10 +2,13 @@ package com.example.controller;
 
 
 import com.example.dto.PageQueryDTO;
+import com.example.entity.Admin;
+import com.example.entity.Grade;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IGradeService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,6 +44,18 @@ public class GradeController {
         // 返回查询结果
         return Result.success(pageResult);
     }
+
+    /**
+     * 根据id获取Grade对象
+     * @param id Grade对象的id
+     * @return 返回获取到的Grade对象
+     */
+    @GetMapping("/{id}")
+    public Result<Grade> getById(@PathVariable Integer id) {
+        Grade grade = gradeService.getById(id);
+        return Result.success(grade);
+    }
+
 
 }
 
