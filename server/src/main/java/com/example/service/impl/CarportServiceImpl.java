@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.constant.CarportConstant;
 import com.example.constant.MessageConstant;
+import com.example.constant.StateConstant;
 import com.example.context.BaseContext;
 import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
@@ -72,23 +72,23 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
             en.setArea(areaMapper.getNameById(en.getArea()));
 
             if ("1".equals(en.getType())) {
-                en.setType(CarportConstant.OPEN_PARKING_SPACE);
+                en.setType(StateConstant.OPEN_PARKING_SPACE);
             } else if ("2".equals(en.getType())) {
-                en.setType(CarportConstant.INDOOR_PARKING_SPACE);
+                en.setType(StateConstant.INDOOR_PARKING_SPACE);
             }
 
             if ("1".equals(en.getClassify())) {
-                en.setClassify(CarportConstant.FIXED_PARKING_SPACE);
+                en.setClassify(StateConstant.FIXED_PARKING_SPACE);
             } else if ("2".equals(en.getClassify())) {
-                en.setClassify(CarportConstant.TEMPORARY_PARKING_SPACE);
+                en.setClassify(StateConstant.TEMPORARY_PARKING_SPACE);
             }
 
             if ("1".equals(en.getState())) {
-                en.setState(CarportConstant.IDLE_STATE);
+                en.setState(StateConstant.IDLE_STATE);
             } else if ("2".equals(en.getState())) {
-                en.setState(CarportConstant.OCCUPANCY_STATE);
+                en.setState(StateConstant.OCCUPANCY_STATE);
             } else if ("3".equals(en.getState())) {
-                en.setState(CarportConstant.MAINTENANCE_STATE);
+                en.setState(StateConstant.MAINTENANCE_STATE);
             }
         });
         // 创建分页查询结果对象
