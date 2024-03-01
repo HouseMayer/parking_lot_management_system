@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Carport;
 import com.example.result.PageResult;
@@ -17,4 +18,6 @@ import com.example.result.PageResult;
 public interface ICarportService extends IService<Carport> {
 
     PageResult pageQuery(PageQueryDTO pageQueryDTO);
+
+    void save(CarportDTO carportDTO);
 }

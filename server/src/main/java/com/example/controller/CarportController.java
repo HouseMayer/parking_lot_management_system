@@ -1,15 +1,13 @@
 package com.example.controller;
 
 
+import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Carport;
 import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.ICarportService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -56,6 +54,20 @@ public class CarportController {
     public Result<Carport> getById(@PathVariable Integer id) {
         Carport carport = carportService.getById(id);
         return Result.success(carport);
+    }
+
+
+    /**
+     * 保存车场信息
+     * @param carportDTO 车场信息
+     * @return 保存结果
+     */
+    @PostMapping("/save")
+    public Result save(@RequestBody CarportDTO carportDTO) {
+
+        carportService.save(carportDTO);
+
+        return Result.success();
     }
 
 

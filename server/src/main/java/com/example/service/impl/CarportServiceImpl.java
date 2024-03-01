@@ -4,12 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.constant.MessageConstant;
+import com.example.dto.CarportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Carport;
+import com.example.exception.LoginException;
 import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
 import com.example.service.ICarportService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -66,5 +70,26 @@ public class CarportServiceImpl extends ServiceImpl<CarportMapper, Carport> impl
 
         // 返回分页查询结果
         return pageResult;
+    }
+
+    /**
+     * 保存车位信息
+     * @param carportDTO 车位信息DTO对象
+     */
+    @Override
+    public void save(CarportDTO carportDTO) {
+        Carport carport = new Carport();
+
+        // 对象属性拷贝
+        BeanUtils.copyProperties(carportDTO, carport);
+
+        // 检查车位名是否已存在
+        if (carportMapper.getByCarport(carport.getCarport()) != null ){
+            throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
+        }
+
+        carport.setDeleted(0);
+        carportMapper.insertCarport(carport);
+
     }
 }
