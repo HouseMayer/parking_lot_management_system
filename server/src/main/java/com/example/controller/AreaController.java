@@ -77,7 +77,7 @@ public class AreaController {
     @PostMapping("/update")
     public Result update(@RequestBody AreaDTO areaDTO) {
 
-        // 调用服务层更新管理员信息
+        // 调用服务层更新信息
         areaService.update(areaDTO);
 
         // 返回更新结果
