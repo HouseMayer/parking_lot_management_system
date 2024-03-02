@@ -1,7 +1,9 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.entity.Access_record;
+import com.example.dto.RecordPageQueryDTO;
+import com.example.entity.AccessRecord;
+import com.example.result.PageResult;
 
 /**
  * <p>
@@ -11,6 +13,7 @@ import com.example.entity.Access_record;
  * @author HouseMayer
  * @since 2023-12-15
  */
-public interface IAccess_recordService extends IService<Access_record> {
+public interface IAccess_recordService extends IService<AccessRecord> {
 
+    PageResult pageQuery(RecordPageQueryDTO recordPageQueryDTO);
 }
