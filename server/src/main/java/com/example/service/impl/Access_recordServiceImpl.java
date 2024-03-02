@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.dto.AccessRecordDTO;
 import com.example.dto.RecordPageQueryDTO;
 import com.example.entity.AccessRecord;
 import com.example.mapper.Access_recordMapper;
@@ -11,6 +12,7 @@ import com.example.mapper.CarportMapper;
 import com.example.result.PageResult;
 import com.example.service.IAccess_recordService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -76,6 +78,16 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
 
         // 返回分页查询结果
         return pageResult;
+    }
+
+    @Override
+    public void save(AccessRecordDTO accessRecordDTO) {
+        AccessRecord accessRecord = new AccessRecord();
+
+        BeanUtils.copyProperties(accessRecordDTO, accessRecord);
+
+        accessRecord.setDeleted(0);
+        recordMapper.insertRecord(accessRecord);
     }
 
 }
