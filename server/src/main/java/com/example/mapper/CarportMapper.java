@@ -36,4 +36,7 @@ public interface CarportMapper extends BaseMapper<Carport> {
 
     @Select("select * from carport where carport = #{carport}")
     Carport getByCarport(String carport);
+
+    @Select("select carport from carport where id = #{carport}")
+    String getCarportById(String carport);
 }
