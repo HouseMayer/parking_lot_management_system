@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Access_record implements Serializable {
+public class AccessRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
