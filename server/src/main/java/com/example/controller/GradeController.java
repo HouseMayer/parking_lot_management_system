@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -105,6 +106,20 @@ public class GradeController {
         return Result.success();
     }
 
+    /**
+     * 批量删除数据
+     * @param ids 要删除的数据id列表
+     * @return 删除结果
+     */
+    @DeleteMapping("/deletebatch")
+    public Result deleteBatch(@RequestBody List<Long> ids){
+
+        // 调用服务层的批量删除方法
+        gradeService.deleteBatch(ids);
+
+        // 返回删除成功的结果
+        return Result.success();
+    }
 
 }
 

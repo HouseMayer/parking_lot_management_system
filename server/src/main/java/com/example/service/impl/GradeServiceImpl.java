@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constant.MessageConstant;
 import com.example.constant.StateConstant;
+import com.example.context.BaseContext;
 import com.example.dto.GradeDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Grade;
+import com.example.exception.AccountLockedException;
 import com.example.exception.LoginException;
 import com.example.mapper.GradeMapper;
 import com.example.result.PageResult;
@@ -18,6 +20,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -97,6 +101,34 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
 
         grade.setDeleted(0);
         gradeMapper.insertGrade(grade);
+    }
+
+    /**
+     * 批量删除车牌信息
+     * @param ids 要删除的车牌ID列表
+     */
+    @Override
+    public void deleteBatch(List<Long> ids) {
+        // 遍历id列表
+        for (Long id : ids) {
+            // 根据ID查询信息
+            Grade grade = this.getById(id);
+            // 如果信息不存在，则抛出车牌不存在异常
+            if (grade == null) {
+                throw new AccountLockedException(MessageConstant.LICENSE_PLATE_NOT_FOUND);
+            }
+
+            // 设置更新时间为当前时间
+            grade.setUpdateTime(LocalDateTime.now());
+            // 设置更新用户为当前用户
+            grade.setUpdateUser(BaseContext.getCurrentId());
+
+            // 更新对象
+            gradeMapper.updateById(grade);
+        }
+
+        // 执行批量删除操作
+        gradeMapper.deleteBatchIds(ids);
     }
 
 }

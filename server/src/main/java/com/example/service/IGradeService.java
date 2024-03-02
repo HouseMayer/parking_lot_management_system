@@ -5,6 +5,9 @@ import com.example.dto.GradeDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Grade;
 import com.example.result.PageResult;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -19,4 +22,7 @@ public interface IGradeService extends IService<Grade> {
     PageResult pageQuery(PageQueryDTO pageQueryDTO);
 
     void save(GradeDTO gradeDTO);
+
+    @Transactional
+    void deleteBatch(List<Long> ids);
 }
