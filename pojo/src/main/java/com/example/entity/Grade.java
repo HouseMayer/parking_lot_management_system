@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -47,7 +48,7 @@ public class Grade implements Serializable {
     /**
      * 截止时间
      */
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     /**
      * 手机号码
