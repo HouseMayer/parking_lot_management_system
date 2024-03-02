@@ -22,6 +22,6 @@ public class StateConstant {
     //黑名单
     public static final String BLACKLIST = "黑名单";
     //VIP
-    public static final String VIP = "`VIP";
+    public static final String VIP = "VIP";
 
 }
