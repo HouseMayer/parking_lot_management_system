@@ -1,5 +1,8 @@
 package com.example.dto;
 
+import lombok.Data;
+
+@Data
 public class AccessRecordDTO {
 
     private Long id;
