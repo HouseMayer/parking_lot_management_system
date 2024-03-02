@@ -2,7 +2,6 @@ package com.example.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 
 @Data
 public class GradeDTO {
@@ -15,7 +14,7 @@ public class GradeDTO {
 
     private String grade;
 
-    private LocalDateTime deadline;
+    private String deadline;
 
     private String phone;
 
