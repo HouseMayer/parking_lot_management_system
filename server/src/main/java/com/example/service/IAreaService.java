@@ -23,7 +23,6 @@ public interface IAreaService extends IService<Area> {
 
     void save(AreaDTO areaDTO);
 
-    @Transactional
     void update(AreaDTO areaDTO);
 
     @Transactional
