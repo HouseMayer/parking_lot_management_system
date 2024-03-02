@@ -19,4 +19,6 @@ public interface IAccess_recordService extends IService<AccessRecord> {
     PageResult pageQuery(RecordPageQueryDTO recordPageQueryDTO);
 
     void save(AccessRecordDTO accessRecordDTO);
+
+    void update(AccessRecordDTO accessRecordDTO);
 }

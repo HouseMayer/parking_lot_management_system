@@ -42,11 +42,33 @@ public class Access_recordController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 保存访问记录
+     * @param accessRecordDTO 访问记录DTO对象
+     * @return 保存结果
+     */
     @PostMapping("/save")
     public Result save(@RequestBody AccessRecordDTO accessRecordDTO) {
 
+        // 调用记录服务保存访问记录
         recordService.save(accessRecordDTO);
 
+        // 返回保存成功的结果
+        return Result.success();
+    }
+
+    /**
+     * 更新访问记录
+     * @param accessRecordDTO 访问记录DTO对象
+     * @return 更新结果
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody AccessRecordDTO accessRecordDTO) {
+
+        // 调用服务层更新访问记录
+        recordService.update(accessRecordDTO);
+
+        // 返回更新结果
         return Result.success();
     }
 

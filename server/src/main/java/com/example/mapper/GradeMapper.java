@@ -30,4 +30,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
 
     @Select("select license_plate from grade where license_plate = #{licensePlate}")
     String getByLicensePlate(String licensePlate);
+
+    @Select("select grade from grade where license_plate = #{licensePlate}")
+    String getGradeByLicensePlate(String licensePlate);
 }
