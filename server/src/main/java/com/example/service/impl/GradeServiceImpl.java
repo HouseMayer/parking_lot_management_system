@@ -20,7 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.List;
 
 /**
@@ -94,6 +94,8 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
         // 对象属性拷贝
         BeanUtils.copyProperties(gradeDTO, grade);
 
+        grade.setDeadline(LocalDate.parse(gradeDTO.getDeadline()));
+
         // 检查车牌是否已存在
         if (gradeMapper.getLicensePlate(grade.getLicensePlate()) != null ){
             throw new LoginException(MessageConstant.LICENSE_PLATE_ALREADY_EXISTS);
@@ -139,14 +141,22 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
     public void update(GradeDTO gradeDTO) {
         Long id = gradeDTO.getId();
         Grade grade = this.getById(id);
+        if (grade == null ) {
+            throw new AccountLockedException(MessageConstant.LICENSE_PLATE_NOT_FOUND);
+        }
         // 检查车牌是否已存在
         if (!gradeDTO.getLicensePlate().equals(grade.getLicensePlate())){
             if (gradeMapper.getByLicensePlate(gradeDTO.getLicensePlate()) != null ){
-                throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
+                throw new LoginException(MessageConstant.LICENSE_PLATE_ALREADY_EXISTS);
             }
-            grade.setLicensePlate(gradeDTO.getLicensePlate());
-            gradeMapper.updateById(grade);
         }
+
+        BeanUtils.copyProperties(gradeDTO, grade);
+        LocalDate deadline = LocalDate.parse(gradeDTO.getDeadline());
+
+        grade.setDeadline(deadline);
+
+        gradeMapper.updateById(grade);
     }
 
 }
