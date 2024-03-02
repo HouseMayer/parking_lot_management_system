@@ -131,4 +131,22 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
         gradeMapper.deleteBatchIds(ids);
     }
 
+    /**
+     * 更新车牌信息
+     * @param gradeDTO 车牌信息DTO
+     */
+    @Override
+    public void update(GradeDTO gradeDTO) {
+        Long id = gradeDTO.getId();
+        Grade grade = this.getById(id);
+        // 检查车牌是否已存在
+        if (!gradeDTO.getLicensePlate().equals(grade.getLicensePlate())){
+            if (gradeMapper.getByLicensePlate(gradeDTO.getLicensePlate()) != null ){
+                throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
+            }
+            grade.setLicensePlate(gradeDTO.getLicensePlate());
+            gradeMapper.updateById(grade);
+        }
+    }
+
 }

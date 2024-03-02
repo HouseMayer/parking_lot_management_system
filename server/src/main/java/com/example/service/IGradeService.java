@@ -25,4 +25,6 @@ public interface IGradeService extends IService<Grade> {
 
     @Transactional
     void deleteBatch(List<Long> ids);
+
+    void update(GradeDTO gradeDTO);
 }

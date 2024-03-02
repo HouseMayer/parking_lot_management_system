@@ -77,6 +77,21 @@ public class GradeController {
     }
 
     /**
+     * 更新年级信息
+     * @param gradeDTO 年级信息DTO
+     * @return 更新结果
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody GradeDTO gradeDTO) {
+
+        // 调用服务层更新信息
+        gradeService.update(gradeDTO);
+
+        // 返回更新结果
+        return Result.success();
+    }
+
+    /**
      * 根据ID删除记录
      * @param id ID
      * @return 删除结果

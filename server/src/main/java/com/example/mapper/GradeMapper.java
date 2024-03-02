@@ -27,4 +27,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
             "values" +
             "(#{licensePlate},#{owner},#{grade},#{deadline},#{phone},#{comment})")
     void insertGrade(Grade grade);
+
+    @Select("select license_plate from grade where license_plate = #{licensePlate}")
+    String getByLicensePlate(String licensePlate);
 }
