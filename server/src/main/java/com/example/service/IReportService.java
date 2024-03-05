@@ -1,7 +1,10 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dto.ExportDTO;
 import com.example.entity.Report;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.example.entity.Report;
  */
 public interface IReportService extends IService<Report> {
 
+    void export(ExportDTO exportDTO);
+
+    void batchExport(List<Long> ids);
 }
