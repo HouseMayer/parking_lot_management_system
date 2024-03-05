@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * <p>
@@ -57,12 +59,23 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
         // 获取当前页面、每页数量和名称
         int currentPage = recordPageQueryDTO.getPage();
         int pageSize = recordPageQueryDTO.getPageSize();
+        String keyword = recordPageQueryDTO.getKeyword();
+
 
         // 创建查询条件封装对象，并根据名称进行模糊查询
         QueryWrapper qw = new QueryWrapper();
-        qw.gt("start_time",recordPageQueryDTO.getStart());
-        qw.lt("start_time",recordPageQueryDTO.getEnd());
-        qw.like("license_plate", recordPageQueryDTO.getKeyword());
+        if ( !recordPageQueryDTO.getStart().isEmpty() ){
+            LocalDateTime start = LocalDateTime.parse(
+                    recordPageQueryDTO.getStart(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault()));
+            LocalDateTime end = LocalDateTime.parse(
+                    recordPageQueryDTO.getEnd(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault()));
+            qw.gt("start_time", start);
+            qw.lt("start_time", end);
+        }
+
+        qw.like("license_plate", keyword);
 
         // 创建分页对象
         IPage<AccessRecord> page = new Page<>(currentPage, pageSize);
