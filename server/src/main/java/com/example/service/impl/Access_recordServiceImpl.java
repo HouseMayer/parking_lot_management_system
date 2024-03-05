@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.constant.MessageConstant;
 import com.example.dto.AccessRecordDTO;
 import com.example.dto.RecordPageQueryDTO;
 import com.example.entity.AccessRecord;
+import com.example.exception.TimeException;
 import com.example.mapper.Access_recordMapper;
 import com.example.mapper.CarportMapper;
 import com.example.mapper.GradeMapper;
@@ -102,26 +104,44 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
         recordMapper.insertRecord(accessRecord);
     }
 
+    /**
+     * 更新访问记录。
+     * 根据提供的访问记录ID, 更新访问记录的结束时间及计算产生的费用。
+     * 费用计算规则基于访问时长，特定车牌等级可能享受优惠。
+     *
+     * @param accessRecordDTO 包含访问记录ID、结束时间等信息的数据传输对象。
+     */
     @Override
     public void update(AccessRecordDTO accessRecordDTO) {
-        
+
+        // 通过ID获取访问记录
         AccessRecord record = this.getById(accessRecordDTO.getId());
-        
-        float cost = 0;
+
+        float cost;
+        // 如果记录不存在，则直接返回
         if (record != null){
             return;
         }
 
+        // 获取记录的开始时间
         LocalDateTime startTime = record.getStartTime();
 
+        // 解析结束时间
         LocalDateTime endTime = LocalDateTime.parse(accessRecordDTO.getEndTime());
 
+        // 如果结束时间早于开始时间，则直接返回
         if (endTime.isBefore(startTime)){
             return;
         }
+
+        // 计算访问时长
         Duration duration = Duration.between(startTime, endTime);
-        Long hours = duration.toHours() % 24;
-        if (hours < 2){
+        Long hours = duration.toHours();
+
+        // 根据访问时长计算费用
+        if (hours <= 0){
+            throw new TimeException(MessageConstant.TIME_ERROR);
+        }else if (hours < 2){
             cost = 0;
         } else if (hours < 24) {
             cost = 5 + hours - 2;
@@ -129,17 +149,23 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
             cost = hours / 24L + hours % 24L;
         }
 
+        // 根据车牌号查询等级
         String grade = gradeMapper.getGradeByLicensePlate(record.getLicensePlate());
 
+        // 如果车牌等级为1，费用设为0
         if ( grade.equals("1")) {
             cost = 0;
         }
 
+        // 设置费用到DTO中
         accessRecordDTO.setCost(String.valueOf(cost));
 
+        // 把DTO的属性值复制到访问记录对象中
         BeanUtils.copyProperties(accessRecordDTO, record);
 
+        // 更新访问记录
         recordMapper.updateById(record);
     }
+
 
 }
