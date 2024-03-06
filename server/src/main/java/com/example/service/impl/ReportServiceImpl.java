@@ -57,14 +57,13 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
         // 将字符串形式的开始时间和结束时间转换为LocalDateTime对象
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        formatter.withZone(ZoneId.systemDefault());
-        LocalDateTime startTime = LocalDateTime.parse(start, formatter);
-        LocalDateTime endTime = LocalDateTime.parse(end, formatter);
+        LocalDateTime startTime = LocalDateTime.parse(start, formatter).plusHours(8);
+        LocalDateTime endTime = LocalDateTime.parse(end, formatter).plusHours(8);
 
         // 构建查询条件
         QueryWrapper qw = new QueryWrapper();
-        qw.gt("end_time", startTime);
-        qw.ge("end_time", endTime);
+        qw.ge("end_time", startTime);
+        qw.le("end_time", endTime);
 
         // 根据查询条件查询访问记录，并计算总条数和总费用
         List<AccessRecord> selectList = recordMapper.selectList(qw);
@@ -188,8 +187,8 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
                 row = sheet1.getRow(7 + i);
                 row.getCell(1).setCellValue(accessRecord.getEndTime().toLocalDate().toString());
                 row.getCell(2).setCellValue(accessRecord.getLicensePlate());
-                row.getCell(3).setCellValue(accessRecord.getStartTime().toString());
-                row.getCell(4).setCellValue(accessRecord.getEndTime().toString());
+                row.getCell(3).setCellValue(accessRecord.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                row.getCell(4).setCellValue(accessRecord.getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 row.getCell(5).setCellValue(Duration.between(accessRecord.getStartTime(), accessRecord.getEndTime()).toMinutes()/60);
                 row.getCell(6).setCellValue(accessRecord.getCost().floatValue());
             }
