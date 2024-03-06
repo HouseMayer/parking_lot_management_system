@@ -19,12 +19,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.module.FindException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -73,7 +70,7 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         List<AccessRecord> selectList = recordMapper.selectList(qw);
         start = startTime.toLocalDate().toString();
         end = endTime.toLocalDate().toString();
-        String name = "未命名";
+        String name;
         if (start.equals(end)){
             name = start + "报表";
         }else{
