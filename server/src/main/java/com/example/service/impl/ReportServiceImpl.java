@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -51,9 +54,12 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         // 从DTO中获取开始时间、结束时间和响应对象
         String start = exportDTO.getStart();
         String end = exportDTO.getEnd();
+
         // 将字符串形式的开始时间和结束时间转换为LocalDateTime对象
-        LocalDateTime startTime = LocalDateTime.parse(start);
-        LocalDateTime endTime = LocalDateTime.parse(end);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        formatter.withZone(ZoneId.systemDefault());
+        LocalDateTime startTime = LocalDateTime.parse(start, formatter);
+        LocalDateTime endTime = LocalDateTime.parse(end, formatter);
 
         // 构建查询条件
         QueryWrapper qw = new QueryWrapper();
@@ -62,8 +68,15 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
         // 根据查询条件查询访问记录，并计算总条数和总费用
         List<AccessRecord> selectList = recordMapper.selectList(qw);
+        start = startTime.toLocalDate().toString();
+        end = endTime.toLocalDate().toString();
+        String name = "未命名";
+        if (start.equals(end)){
+            name = start + "报表";
+        }else{
+            name = start + "~" + end +"报表";
+        }
 
-        String name = start + "~" + end;
         editReportTemplate(selectList, start, end, name);
 
 //        int total = selectList.size();
@@ -182,7 +195,7 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
             }
 
 
-            FileOutputStream     out = new FileOutputStream("C:/Users/lb267/Desktop/报表/" + name + ".xlsx");
+            FileOutputStream out = new FileOutputStream("C:/Users/lb267/Desktop/报表/" + name + ".xlsx");
             excel.write(out);
             out.close();
             excel.close();
