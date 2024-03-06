@@ -20,6 +20,8 @@ public class MessageConstant {
     public static final String LICENSE_PLATE_NOT_FOUND = "车牌不存在";
     public static final String TIME_ERROR = "时间错误";
     public static final String UNKNOWN_ERROR = "未知错误";
+    public static final String INVALID_DOCUMENT = "该文件是一个文件夹，请指定一个有效的文件";
+    public static final String FILE_BE_USED = "该文件正在被另一个程序使用，无法访问";
     public static final String ALREADT_EXISTS = "已存在";
     public static final String USER_NOT_LOGIN = "用户未登录";
     public static final String LOGIN_FAILED = "登录失败";

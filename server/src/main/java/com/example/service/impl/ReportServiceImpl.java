@@ -2,9 +2,11 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.constant.MessageConstant;
 import com.example.dto.ExportDTO;
 import com.example.entity.AccessRecord;
 import com.example.entity.Report;
+import com.example.exception.FileException;
 import com.example.mapper.Access_recordMapper;
 import com.example.mapper.ReportMapper;
 import com.example.service.IReportService;
@@ -15,9 +17,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.module.FindException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -158,6 +162,7 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
      * @param name 报表名
      */
     public void editReportTemplate(List<AccessRecord> selectList, String start, String end, String name){
+
         float costTotal = 0;
 
         int total = selectList.size();
@@ -167,7 +172,6 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         }
         // 加载Excel模板文件
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("templates/ReportTemplates.xlsx");
-        log.info("in:{}", in==null);
         try {
             XSSFWorkbook excel = new XSSFWorkbook(in);
             XSSFSheet sheet1 = excel.getSheet("Sheet1");
@@ -192,14 +196,21 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
                 row.getCell(5).setCellValue(Duration.between(accessRecord.getStartTime(), accessRecord.getEndTime()).toMinutes()/60);
                 row.getCell(6).setCellValue(accessRecord.getCost().floatValue());
             }
-
+            File file = new File("C:/Users/lb267/Desktop/报表/" + name + ".xlsx");
+            if (file.exists() && file.isDirectory()) {
+                throw new FileException(MessageConstant.INVALID_DOCUMENT);
+            }
+            if (file.exists() && !file.canWrite()) {
+                log.info("qwewqewe");
+                throw new FileException(MessageConstant.FILE_BE_USED);
+            }
 
             FileOutputStream out = new FileOutputStream("C:/Users/lb267/Desktop/报表/" + name + ".xlsx");
             excel.write(out);
             out.close();
             excel.close();
             in.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
