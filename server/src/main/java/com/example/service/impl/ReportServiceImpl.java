@@ -179,7 +179,7 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
             row = sheet1.getRow(4);
             row.getCell(2).setCellValue(end);
-            row.getCell(4).setCellValue(costTotal/total);
+            row.getCell(4).setCellValue(total == 0 ? 0 : costTotal/total);
 
             // 填充访问记录详情
             for (int i = 0; i < selectList.size(); i++) {
