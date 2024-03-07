@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/upload")
 public class UploadController {
 
     @Resource
