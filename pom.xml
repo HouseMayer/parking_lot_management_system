@@ -38,6 +38,7 @@
         <jjwt>0.9.1</jjwt>
         <jaxb-api>2.3.1</jaxb-api>
         <poi>3.16</poi>
+        <baidu>4.16.18</baidu>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -135,6 +136,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
                 <version>2.7.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baidu.aip</groupId>
+                <artifactId>java-sdk</artifactId>
+                <version>${baidu}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
