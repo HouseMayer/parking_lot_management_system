@@ -82,7 +82,7 @@ public class FileUtil {
      * @throws FileNotFoundException 如果文件不存在，则抛出此异常。
      */
     public static String readFileAsString(MultipartFile multipartFile) throws IOException {
-        String uploadPath = "C:\\Work\\WorkSpace\\IDEA_WorkSpace\\parking-lot-manager-system\\file";
+        String uploadPath = "C:\\Work\\WorkSpace\\IDEA_WorkSpace\\parking-lot-manager-system\\server\\src\\main\\resources\\filee";
         String originalFilename = multipartFile.getOriginalFilename();
         File file = new File(uploadPath, originalFilename);
         FileOutputStream fos = new FileOutputStream(file);
@@ -117,7 +117,7 @@ public class FileUtil {
 
 
     public static byte[] readFileByBytes(MultipartFile multipartFile) throws IOException {
-        String uploadPath = "C:\\Work\\WorkSpace\\IDEA_WorkSpace\\parking-lot-manager-system\\file";
+        String uploadPath = "C:\\Work\\WorkSpace\\IDEA_WorkSpace\\parking-lot-manager-system\\server\\src\\main\\resources\\file";
         String originalFilename = multipartFile.getOriginalFilename();
         File file = new File(uploadPath, originalFilename);
         FileOutputStream fos = new FileOutputStream(file);

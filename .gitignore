@@ -31,4 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
-/file/
+/server/src/main/resources/file/
