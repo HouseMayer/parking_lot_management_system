@@ -58,6 +58,13 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
+                <exclusions>
+                    <!-- 排除自带的logback依赖 -->
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
                 <version>2.7.3</version>
             </dependency>
             <dependency>
