@@ -15,4 +15,4 @@ redis:
   host: localhost
   port: 6379
   password: 123
-  database: 1
+  database: 10
