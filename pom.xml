@@ -39,9 +39,15 @@
         <jaxb-api>2.3.1</jaxb-api>
         <poi>3.16</poi>
         <baidu>4.16.18</baidu>
+        <gson>RELEASE113</gson>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.netbeans.external</groupId>
+                <artifactId>com-google-gson</artifactId>
+                <version>${gson}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
