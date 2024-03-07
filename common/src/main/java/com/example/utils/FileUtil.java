@@ -82,7 +82,12 @@ public class FileUtil {
      * @throws FileNotFoundException 如果文件不存在，则抛出此异常。
      */
     public static String readFileAsString(MultipartFile multipartFile) throws IOException {
-        File file= (File) multipartFile;
+        String uploadPath = "C:\\Work\\WorkSpace\\IDEA_WorkSpace\\parking-lot-manager-system\\file";
+        String originalFilename = multipartFile.getOriginalFilename();
+        File file = new File(uploadPath, originalFilename);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(multipartFile.getBytes());
+        fos.close();
         // 检查文件是否存在
         if (!file.exists()) {
             throw new FileNotFoundException("图片未获取");
@@ -112,7 +117,13 @@ public class FileUtil {
 
 
     public static byte[] readFileByBytes(MultipartFile multipartFile) throws IOException {
-        File file= (File) multipartFile;
+        String uploadPath = "C:\\Work\\WorkSpace\\IDEA_WorkSpace\\parking-lot-manager-system\\file";
+        String originalFilename = multipartFile.getOriginalFilename();
+        File file = new File(uploadPath, originalFilename);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(multipartFile.getBytes());
+        fos.close();
+
         if (!file.exists()) {
             throw new FileNotFoundException("图片未获取");
         } else {
@@ -138,7 +149,6 @@ public class FileUtil {
                 } catch (IOException var14) {
                     var14.printStackTrace();
                 }
-
                 bos.close();
             }
         }
