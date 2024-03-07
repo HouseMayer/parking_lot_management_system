@@ -6,3 +6,6 @@ element:
     database: parking_lot_management_system
     username: root
     password: 123
+  baidu:
+    apikey: cc4PzH0kttWqEfC6qxKbHaeY
+    secret-key: EHTLtgXeGhRT4u88jWPRimx30OyPCZDB

@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+baidu:
+  apikey: ${element.baidu.apikey}
+  secret-key: ${element.baidu.secret-key}
+
 spring:
   profiles:
     active: dev
