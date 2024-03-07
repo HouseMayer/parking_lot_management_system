@@ -1,8 +1,26 @@
 package com.example.service.impl;
 
+import com.example.api.auth.AuthService;
+import com.example.constant.MessageConstant;
+import com.example.dto.AccessRecordDTO;
+import com.example.exception.FileException;
+import com.example.properties.FilePathProperties;
+import com.example.service.IAccess_recordService;
 import com.example.service.IUploadService;
+import com.example.utils.Base64Util;
+import com.example.utils.FileUtil;
+import com.example.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
 
 
 @Slf4j
@@ -10,5 +28,81 @@ import org.springframework.stereotype.Service;
 public class UploadServiceImpl implements IUploadService {
 
 
+    @Resource
+    private AuthService authService;
+    @Resource
+    private IAccess_recordService access_recordService;
+    @Resource
+    private FilePathProperties filePathProperties;
 
+
+
+    /**
+     * 处理文件上传，将上传的文件保存到指定路径，并记录车牌号及访问记录。
+     *
+     * @param file 上传的文件对象，预期为车牌照片。
+     * @throws IOException 当读写文件发生错误时抛出。
+     */
+    @Override
+    public void in(MultipartFile file) throws IOException {
+        // 获取文件保存路径
+        String filePath = filePathProperties.getPath();
+        // 从文件中提取车牌号
+        String licensePlate = licensePlate(file);
+        // 构造新文件名，以车牌号命名
+        File newFile = new File(filePath, licensePlate + ".jpg");
+        // 创建文件输出流，准备写入文件
+        FileOutputStream fos =  new FileOutputStream(newFile);
+        // 将上传文件的内容写入到新文件中
+        fos.write(file.getBytes());
+        // 关闭文件输出流
+        fos.close();
+        // 获取上传文件的原始名称
+        String originalFilename = file.getOriginalFilename();
+        // 构造原始文件名对应的文件对象，用于后续删除
+        File fileToDelete = new File(filePath + originalFilename);
+        if (fileToDelete.exists()) {
+            // 如果原始文件存在，则删除它
+            fileToDelete.delete();
+        } else {
+            // 如果不存在，抛出文件未找到异常
+            throw new FileException(MessageConstant.FILE_NOT_FOUND);
+        }
+
+        // 创建访问记录数据传输对象，并设置相关信息
+        AccessRecordDTO accessRecordDTO = new AccessRecordDTO();
+        accessRecordDTO.setStartTime(String.valueOf(LocalDateTime.now()));
+        accessRecordDTO.setLicensePlate(licensePlate);
+
+        // 保存访问记录
+        access_recordService.save(accessRecordDTO);
+
+    }
+
+
+
+
+    public String licensePlate(MultipartFile file) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/ocr/v1/license_plate";
+        try {
+            // 本地文件路径
+            byte[] imgData = FileUtil.readFileByBytes(file);
+            String imgStr = Base64Util.encode(imgData);
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = authService.getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            JSONObject jsonObject = new JSONObject(result);
+            String licensePlate = jsonObject.getJSONObject("words_result").getString("number");
+            return licensePlate;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
