@@ -22,8 +22,7 @@ spring:
       port: ${redis.port}
       password: ${redis.password}
       database: ${redis.database}
-  mvc:
-    static-path-pattern: /**
+
 
 mybatis:
   #mapper配置文件
