@@ -1,5 +1,7 @@
 package com.example.utils;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.*;
 
 /**
@@ -69,4 +71,43 @@ public class FileUtil {
             }
         }
     }
+
+
+    /**
+     * 读取并返回文件的内容。
+     *
+     * @param multipartFile 表示要读取的文件，类型为MultipartFile。
+     * @return 文件的内容，以字符串形式返回。
+     * @throws IOException 如果文件不存在或文件过大，则抛出此异常。
+     * @throws FileNotFoundException 如果文件不存在，则抛出此异常。
+     */
+    public static String readFileAsString(MultipartFile multipartFile) throws IOException {
+        File file= (File) multipartFile;
+        // 检查文件是否存在
+        if (!file.exists()) {
+            throw new FileNotFoundException("图片未获取");
+        }
+
+        // 检查文件大小是否超过1GB
+        if (file.length() > 1024 * 1024 * 1024) {
+            throw new IOException("File is too large");
+        }
+
+        StringBuilder sb = new StringBuilder((int) (file.length()));
+        // 创建字节输入流用于读取文件
+        FileInputStream fis = new FileInputStream(file);
+        // 创建一个缓冲区，用于存储读取的字节
+        byte[] bbuf = new byte[10240];
+        // hasRead用于保存每次读取的字节数
+        int hasRead = 0;
+        // 循环读取文件，直到没有更多的字节可读
+        while ( (hasRead = fis.read(bbuf)) > 0 ) {
+            // 将读取的字节转换为字符串，并追加到StringBuilder中
+            sb.append(new String(bbuf, 0, hasRead));
+        }
+        // 关闭文件输入流
+        fis.close();
+        return sb.toString();
+    }
+
 }
