@@ -110,7 +110,7 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
 
         // 使用BeanUtils将访问记录DTO对象的属性复制到访问记录对象中
         BeanUtils.copyProperties(accessRecordDTO, accessRecord);
-
+        accessRecord.setStartTime(LocalDateTime.parse(accessRecordDTO.getStartTime()));
         // 设置删除标记为0
         accessRecord.setDeleted(0);
         // 调用记录映射器的插入记录方法，将访问记录插入数据库
