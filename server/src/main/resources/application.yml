@@ -22,6 +22,8 @@ spring:
       port: ${redis.port}
       password: ${redis.password}
       database: ${redis.database}
+  mvc:
+    static-path-pattern: /**
 
 mybatis:
   #mapper配置文件
@@ -37,6 +39,8 @@ mybatis-plus:
   type-aliases-package: com.example.entity
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
 
 file:
   path: ${file.path1}
