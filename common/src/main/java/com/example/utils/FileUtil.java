@@ -110,4 +110,39 @@ public class FileUtil {
         return sb.toString();
     }
 
+
+    public static byte[] readFileByBytes(MultipartFile multipartFile) throws IOException {
+        File file= (File) multipartFile;
+        if (!file.exists()) {
+            throw new FileNotFoundException("图片未获取");
+        } else {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream((int) file.length());
+            BufferedInputStream in = null;
+
+            try {
+                in = new BufferedInputStream(new FileInputStream(file));
+                short bufSize = 1024;
+                byte[] buffer = new byte[bufSize];
+                int len1;
+                while (-1 != (len1 = in.read(buffer, 0, bufSize))) {
+                    bos.write(buffer, 0, len1);
+                }
+
+                byte[] var7 = bos.toByteArray();
+                return var7;
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException var14) {
+                    var14.printStackTrace();
+                }
+
+                bos.close();
+            }
+        }
+    }
+
+
 }
