@@ -12,6 +12,8 @@ import com.example.utils.FileUtil;
 import com.example.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +36,8 @@ public class UploadServiceImpl implements IUploadService {
     private IAccess_recordService access_recordService;
     @Resource
     private FilePathProperties filePathProperties;
-
+    @Resource
+    private RedisTemplate redisTemplate;
 
 
     /**
@@ -60,7 +63,7 @@ public class UploadServiceImpl implements IUploadService {
         // 获取上传文件的原始名称
         String originalFilename = file.getOriginalFilename();
         // 构造原始文件名对应的文件对象，用于后续删除
-        File fileToDelete = new File(filePath + originalFilename);
+        File fileToDelete = new File(filePath + "\\" + originalFilename);
         if (fileToDelete.exists()) {
             // 如果原始文件存在，则删除它
             fileToDelete.delete();
@@ -73,6 +76,10 @@ public class UploadServiceImpl implements IUploadService {
         AccessRecordDTO accessRecordDTO = new AccessRecordDTO();
         accessRecordDTO.setStartTime(String.valueOf(LocalDateTime.now()));
         accessRecordDTO.setLicensePlate(licensePlate);
+
+        ValueOperations ops = redisTemplate.opsForValue();
+
+        ops.set(licensePlate, filePathProperties.getUrl() + "/" + licensePlate + ".jpg");
 
         // 保存访问记录
         access_recordService.save(accessRecordDTO);
