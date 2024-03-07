@@ -44,8 +44,11 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @param registry
      */
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        String IMAGE_PATH = System.getProperty("user.dir")+"/server/src/main/resources/static/file/";
+        log.info("路径：{}", IMAGE_PATH);
+        registry.addResourceHandler("/file/**")
+                .addResourceLocations("file:"+IMAGE_PATH)
+                .setCachePeriod(0);  // 可以设置缓存时间，0表示禁用缓存
     }
 
     /**
