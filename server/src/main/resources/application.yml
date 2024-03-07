@@ -16,6 +16,12 @@ spring:
     url: jdbc:mysql://${element.datasource.host}:${element.datasource.port}/${element.datasource.database}?characterEncoding=utf-8&useSSL=false
     username: ${element.datasource.username}
     password: ${element.datasource.password}
+  data:
+    redis:
+      host: ${redis.host}
+      port: ${redis.port}
+      password: ${redis.password}
+      database: ${redis.database}
 
 mybatis:
   #mapper配置文件
