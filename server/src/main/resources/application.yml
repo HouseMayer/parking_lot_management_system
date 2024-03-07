@@ -43,6 +43,7 @@ mybatis-plus:
 
 file:
   path: ${file.path1}
+  url: ${file.path2}}
 
 element:
   jwt:
