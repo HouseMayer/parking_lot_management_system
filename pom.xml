@@ -40,9 +40,15 @@
         <poi>3.16</poi>
         <baidu>4.16.18</baidu>
         <gson>RELEASE113</gson>
+        <okhttp>4.10.0</okhttp>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp}</version>
+            </dependency>
             <dependency>
                 <groupId>org.netbeans.external</groupId>
                 <artifactId>com-google-gson</artifactId>
