@@ -1,6 +1,7 @@
 package com.example.api.auth;
 
 import com.example.properties.BaiduProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import okhttp3.*;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,10 +10,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 
-
-
-
+@Slf4j
 @Component
 public class AuthService {
 
@@ -31,7 +31,7 @@ public class AuthService {
         if ( !(accessToken == null) ){
             return accessToken;
         }
-
+        log.info("获取新access_token");
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, "");
         Request request = new Request.Builder()
@@ -45,9 +45,9 @@ public class AuthService {
         String responseBody = response.body().string();
         JSONObject jsonObject = new JSONObject(responseBody);
         accessToken = jsonObject.getString("access_token");
+        Long expires_in = jsonObject.getLong("expires_in");
 
-
-        valueOperations.set("access_token", accessToken);
+        valueOperations.set("access_token", accessToken, expires_in, TimeUnit.SECONDS);
 
         return accessToken;
     }
