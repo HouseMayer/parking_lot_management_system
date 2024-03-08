@@ -110,7 +110,6 @@ public class UploadServiceImpl implements IUploadService {
         }
         // 拟定新文件名（车牌号+.jpg）
         File fileToDelete = new File(filePath + "\\" + licensePlate + ".jpg");
-        log.info("path:{}", filePath + "\\" + licensePlate + ".jpg");
 
         // 设置访问记录信息
         AccessRecordDTO accessRecordDTO = new AccessRecordDTO();
@@ -120,7 +119,6 @@ public class UploadServiceImpl implements IUploadService {
         log.info("exists:{}", fileToDelete.exists());
         if (fileToDelete.exists()) {
             // 如果文件已存在，则进行删除并更新数据库
-            log.info("删除");
             fileToDelete.delete(); // 删除文件
             stringRedisTemplate.delete(licensePlate); // 删除Redis中的记录
             access_recordService.update(accessRecordDTO); // 更新数据库访问记录
