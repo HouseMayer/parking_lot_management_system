@@ -6,6 +6,9 @@ import com.example.entity.AccessRecord;
 import com.example.enumeration.OperationType;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * <p>
@@ -24,4 +27,7 @@ public interface Access_recordMapper extends BaseMapper<AccessRecord> {
             "VALUES " +
             "(#{licensePlate}, #{startTime}, #{endTime}, #{carport}, #{cost}, #{deleted}, #{updateTime}, #{updateUser}, #{createTime}, #{createUser})")
     void insertRecord(AccessRecord accessRecord);
+
+    @Select("select * from access_record where license_plate = #{licensePlate}")
+    List<AccessRecord> getByLicensePlate(String licensePlate);
 }
