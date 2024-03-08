@@ -27,9 +27,26 @@ public class UploadController {
      * @throws IOException 如果在处理文件过程中发生IO异常。
      */
     @RequestMapping("/in")
-    public Result upload(MultipartFile file) throws IOException {
+    public Result uploadIn(MultipartFile file) throws IOException {
         // 将上传的文件交由uploadService处理
         uploadService.in(file);
+
+        // 返回操作成功的结果
+        return Result.success();
+    }
+
+
+    /**
+     * 处理文件上传的请求。
+     *
+     * @param file 用户上传的文件，类型为MultipartFile。
+     * @return 返回一个表示操作成功的Result对象。
+     * @throws IOException 如果在处理文件过程中发生IO异常。
+     */
+    @RequestMapping("/out")
+    public Result uploadOut(MultipartFile file) throws IOException {
+        // 将文件转交给uploadService进行处理
+        uploadService.out(file);
 
         // 返回操作成功的结果
         return Result.success();

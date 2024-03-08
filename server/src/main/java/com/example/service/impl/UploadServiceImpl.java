@@ -12,7 +12,9 @@ import com.example.utils.FileUtil;
 import com.example.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,9 @@ public class UploadServiceImpl implements IUploadService {
     private FilePathProperties filePathProperties;
     @Resource
     private RedisTemplate redisTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
 
 
     /**
@@ -86,6 +91,45 @@ public class UploadServiceImpl implements IUploadService {
 
     }
 
+    /**
+     * 处理上传的文件，包括提取车牌号、保存文件、更新或插入访问记录。
+     *
+     * @param file 上传的文件，预期为车牌照片。
+     */
+    @Override
+    public void out(MultipartFile file) {
+        // 获取文件保存路径
+        String filePath = filePathProperties.getPath();
+        // 从文件中提取车牌号
+        String licensePlate = licensePlate(file);
+        String originalFilename = file.getOriginalFilename();
+        File originalFile = new File(filePath + "\\" + originalFilename);
+        if (originalFile.exists()) {
+            // 如果原始文件存在，则删除它
+            originalFile.delete();
+        }
+        // 拟定新文件名（车牌号+.jpg）
+        File fileToDelete = new File(filePath + "\\" + licensePlate + ".jpg");
+        log.info("path:{}", filePath + "\\" + licensePlate + ".jpg");
+
+        // 设置访问记录信息
+        AccessRecordDTO accessRecordDTO = new AccessRecordDTO();
+        accessRecordDTO.setEndTime(String.valueOf(LocalDateTime.now()));
+        accessRecordDTO.setLicensePlate(licensePlate);
+
+        log.info("exists:{}", fileToDelete.exists());
+        if (fileToDelete.exists()) {
+            // 如果文件已存在，则进行删除并更新数据库
+            log.info("删除");
+            fileToDelete.delete(); // 删除文件
+            stringRedisTemplate.delete(licensePlate); // 删除Redis中的记录
+            access_recordService.update(accessRecordDTO); // 更新数据库访问记录
+        } else {
+            // 如果文件不存在，进行新增操作
+            access_recordService.save(accessRecordDTO); // 新增数据库访问记录
+        }
+
+    }
 
 
 

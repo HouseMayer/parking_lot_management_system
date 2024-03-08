@@ -9,4 +9,6 @@ public interface IUploadService {
 
 
     void in(MultipartFile file) throws IOException;
+
+    void out(MultipartFile file);
 }
