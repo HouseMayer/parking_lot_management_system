@@ -8,7 +8,6 @@ import com.example.constant.MessageConstant;
 import com.example.dto.ExportDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.AccessRecord;
-import com.example.entity.Admin;
 import com.example.entity.Report;
 import com.example.exception.FileException;
 import com.example.mapper.Access_recordMapper;
@@ -131,8 +130,16 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         String keyword = pageQueryDTO.getKeyword();
 
         // 创建查询条件，实现模糊查询
-        QueryWrapper<Report> wrapper = new QueryWrapper<Report>().like("recordDate", keyword);
+        QueryWrapper<Report> wrapper;
+        if (keyword == null || keyword.equals("")) {
 
+            wrapper = new QueryWrapper<>();
+
+        } else {
+            wrapper = new QueryWrapper<Report>().eq("record_date", keyword);
+
+        }
+        log.info("wrapper:{}", wrapper.getSqlSelect());
         // 初始化分页对象
         IPage<Report> page = new Page<>(currentPage, pageSize);
 
