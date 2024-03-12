@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -36,10 +37,11 @@ public class Report implements Serializable {
      */
     private BigDecimal earning;
 
+    private Integer total;
     /**
      * 时间
      */
-    private LocalDateTime recordDate;
+    private LocalDate recordDate;
 
     /**
      * 逻辑删除
