@@ -23,4 +23,6 @@ public interface IReportService extends IService<Report> {
     void batchExport(List<Long> ids);
 
     PageResult pageQuery(PageQueryDTO pageQueryDTO);
+
+    void exportById(String id);
 }

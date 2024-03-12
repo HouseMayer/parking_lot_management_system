@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -108,6 +109,26 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         // 使用访问记录列表、开始和结束时间编辑报告模板，并通过响应对象将报告返回给客户端
         editReportTemplate(recordList, start, end, name);
 
+    }
+
+    @Override
+    public void exportById(String reportDate) {
+        LocalDate date = LocalDate.parse(reportDate);
+        String begin = date.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String end = date.atTime(23, 59, 59).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime beginTime = LocalDateTime.parse(begin, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime endTime = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        // 构建查询条件
+        QueryWrapper qw = new QueryWrapper();
+        qw.ge("end_time", beginTime);
+        qw.le("end_time", endTime);
+
+        // 根据查询条件查询访问记录，并计算总条数和总费用
+        List<AccessRecord> selectList = recordMapper.selectList(qw);
+        String name = date + "报表";
+
+        editReportTemplate(selectList, begin, end, name);
     }
 
     /**

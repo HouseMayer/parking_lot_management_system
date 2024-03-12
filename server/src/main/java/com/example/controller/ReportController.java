@@ -3,7 +3,6 @@ package com.example.controller;
 
 import com.example.dto.ExportDTO;
 import com.example.dto.PageQueryDTO;
-import com.example.entity.Admin;
 import com.example.entity.Report;
 import com.example.result.PageResult;
 import com.example.result.Result;
@@ -90,15 +89,13 @@ public class ReportController {
     /**
      * 根据报告ID导出报告。
      *
-     * @param id 报告的唯一标识符，从URL路径变量中获取。
+     * @param reportDate 日期，从URL路径变量中获取。
      * @return 返回一个包含指定报告的结果对象。如果查询成功，结果对象的状态为成功（success），并包含报告对象。
      */
-    @GetMapping("/{id}")
-    public Result<Report> exportById(@PathVariable Integer id) {
-        // 通过报告服务，根据ID获取报告
-        Report report = reportService.getById(id);
-        // 返回成功的查询结果，包含获取到的报告
-        return Result.success(report);
+    @GetMapping("/{reportDate}")
+    public Result<Report> exportById(@PathVariable String reportDate) {
+        reportService.exportById(reportDate);
+        return Result.success();
     }
 
 
