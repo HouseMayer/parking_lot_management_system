@@ -68,13 +68,23 @@ public class ReportController {
 
     }
 
+    /**
+     * 分页查询接口
+     *
+     * @param pageQueryDTO 分页查询参数对象，包含查询条件及分页信息
+     * @return 返回查询结果的包装对象，其中包含分页结果信息
+     */
     @GetMapping("/page")
     public Result<PageResult> list(PageQueryDTO pageQueryDTO) {
 
+        // 调用报告服务进行分页查询
         PageResult pageResult = reportService.pageQuery(pageQueryDTO);
 
+        // 将查询结果包装成成功结果并返回
         return Result.success(pageResult);
     }
+
+
 
 
 
