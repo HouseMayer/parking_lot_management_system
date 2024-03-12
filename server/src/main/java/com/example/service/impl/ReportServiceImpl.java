@@ -1,14 +1,19 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constant.MessageConstant;
 import com.example.dto.ExportDTO;
+import com.example.dto.PageQueryDTO;
 import com.example.entity.AccessRecord;
+import com.example.entity.Admin;
 import com.example.entity.Report;
 import com.example.exception.FileException;
 import com.example.mapper.Access_recordMapper;
 import com.example.mapper.ReportMapper;
+import com.example.result.PageResult;
 import com.example.service.IReportService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -41,6 +46,8 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
     @Resource
     private Access_recordMapper recordMapper;
+    @Resource
+    private ReportMapper reportMapper;
 
     /**
      * 导出报表功能实现。
@@ -79,49 +86,6 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
         editReportTemplate(selectList, start, end, name);
 
-//        int total = selectList.size();
-//        for (AccessRecord accessRecord : selectList) {
-//            costTotal += accessRecord.getCost().floatValue();
-//        }
-//        // 加载Excel模板文件
-//        InputStream in = this.getClass().getClassLoader().getResourceAsStream("template/ReportTemplates.xlsx");
-//        try {
-//            XSSFWorkbook excel = new XSSFWorkbook(in);
-//            XSSFSheet sheet1 = excel.getSheet("Sheet1");
-//
-//            // 填充Excel表格中的数据
-//            XSSFRow row = sheet1.getRow(3);
-//            row.getCell(2).setCellValue(start);
-//            row.getCell(4).setCellValue(total);
-//            row.getCell(6).setCellValue(df.format(costTotal));
-//
-//            row = sheet1.getRow(4);
-//            row.getCell(2).setCellValue(end);
-//            row.getCell(4).setCellValue(costTotal/total);
-//
-//            // 填充访问记录详情
-//            for (int i = 0; i < selectList.size(); i++) {
-//                AccessRecord accessRecord = selectList.get(i);
-//                row = sheet1.getRow(7 + i);
-//                row.getCell(1).setCellValue(accessRecord.getEndTime().toLocalDate().toString());
-//                row.getCell(2).setCellValue(accessRecord.getLicensePlate());
-//                row.getCell(3).setCellValue(accessRecord.getStartTime().toString());
-//                row.getCell(4).setCellValue(accessRecord.getEndTime().toString());
-//                row.getCell(5).setCellValue(Duration.between(startTime, endTime).toString());
-//                row.getCell(6).setCellValue(df.format(accessRecord.getCost()));
-//            }
-//
-//            // 将Excel写入HTTP响应流，供客户端下载
-//            ServletOutputStream out = response.getOutputStream();
-//            excel.write(out);
-//
-//            // 关闭资源
-//            out.close();
-//            excel.close();
-//            in.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     /**
@@ -147,7 +111,35 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
     }
 
+    @Override
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
 
+        // 如果参数为空，则抛出运行时异常
+        if (pageQueryDTO == null) {
+            throw new RuntimeException("参数不能为空");
+        }
+        // 获取当前页面、每页数量和名称
+        int currentPage = pageQueryDTO.getPage();
+        int pageSize = pageQueryDTO.getPageSize();
+        String keyword = pageQueryDTO.getKeyword();
+        // 创建查询条件封装对象，并根据名称进行模糊查询
+        QueryWrapper<Report> wrapper = new QueryWrapper<Report>().like("recordDate", keyword);
+        // 创建分页对象
+        IPage<Report> page = new Page<>(currentPage, pageSize);
+        // 执行查询，并获取查询结果列表
+        IPage<Report> pageRes = reportMapper.selectPage(page, wrapper);
+
+        // 创建分页查询结果对象
+        PageResult pageResult = new PageResult();
+
+        // 设置查询结果记录和总记录数
+        pageResult.setRecords(pageRes.getRecords());
+        log.info("分页查询结果"+pageRes.getRecords().toString());
+        pageResult.setTotal(pageRes.getTotal());
+
+        // 返回分页查询结果
+        return pageResult;
+    }
 
 
     /**

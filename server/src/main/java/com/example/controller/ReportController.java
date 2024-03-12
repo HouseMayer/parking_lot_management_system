@@ -2,6 +2,8 @@ package com.example.controller;
 
 
 import com.example.dto.ExportDTO;
+import com.example.dto.PageQueryDTO;
+import com.example.result.PageResult;
 import com.example.result.Result;
 import com.example.service.IReportService;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +66,14 @@ public class ReportController {
 
         return Result.success();
 
+    }
+
+    @GetMapping("/page")
+    public Result<PageResult> list(PageQueryDTO pageQueryDTO) {
+
+        PageResult pageResult = reportService.pageQuery(pageQueryDTO);
+
+        return Result.success(pageResult);
     }
 
 
