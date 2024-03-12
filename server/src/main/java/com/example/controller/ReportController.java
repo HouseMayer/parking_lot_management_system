@@ -93,8 +93,8 @@ public class ReportController {
      * @param id 报告的唯一标识符，从URL路径变量中获取。
      * @return 返回一个包含指定报告的结果对象。如果查询成功，结果对象的状态为成功（success），并包含报告对象。
      */
-    @GetMapping("/{id}}")
-    public Result<Report> exportById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public Result<Report> exportById(@PathVariable Integer id) {
         // 通过报告服务，根据ID获取报告
         Report report = reportService.getById(id);
         // 返回成功的查询结果，包含获取到的报告
