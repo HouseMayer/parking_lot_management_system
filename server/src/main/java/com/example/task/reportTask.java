@@ -40,6 +40,7 @@ public class reportTask {
         }
 
         report.setRecordDate(yesterday);
+        report.setDeleted(0);
         reportMapper.insertReport(report);
     }
 //    @Scheduled(cron = "0 0/1 * * * ?")
@@ -63,6 +64,8 @@ public class reportTask {
             }
 
             report.setRecordDate(day);
+            report.setDeleted(0);
+
             reportMapper.insertReport(report);
 
             day = day.plusDays(1);
