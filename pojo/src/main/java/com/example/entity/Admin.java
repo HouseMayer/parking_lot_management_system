@@ -40,7 +40,7 @@ public class Admin implements Serializable {
     private String userName;
 
     /**
-     * 密码 默认密码123
+     * 密码 默认密码111111
      */
     private String password;
 
