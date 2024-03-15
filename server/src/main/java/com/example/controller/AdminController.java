@@ -77,6 +77,14 @@ public class AdminController {
     }
 
 
+    @GetMapping("/self")
+    public Result<Admin> getByToken() {
+        Integer id = Math.toIntExact(BaseContext.getCurrentId());
+        Admin admin = adminService.getById(id);
+        return Result.success(admin);
+    }
+
+
 
     /**
      * 员工登录
