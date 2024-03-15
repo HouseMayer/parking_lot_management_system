@@ -160,7 +160,9 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
             wrapper = new QueryWrapper<Report>().eq("record_date", keyword);
 
         }
+        wrapper.orderByDesc("record_date");
         log.info("wrapper:{}", wrapper.getSqlSelect());
+
         // 初始化分页对象
         IPage<Report> page = new Page<>(currentPage, pageSize);
 

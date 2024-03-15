@@ -79,8 +79,8 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
             qw.gt("start_time", start);
             qw.lt("start_time", end);
         }
-
         qw.like("license_plate", keyword);
+        qw.orderByDesc("start_time");
 
         // 创建分页对象
         IPage<AccessRecord> page = new Page<>(currentPage, pageSize);
