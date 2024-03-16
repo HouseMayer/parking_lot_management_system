@@ -15,6 +15,8 @@ public class AdminDTO implements Serializable {
     //用户名
     private String userName;
 
+    private String password;
+
     //电话号码
     private String phone;
 

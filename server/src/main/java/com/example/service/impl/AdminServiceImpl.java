@@ -165,6 +165,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
                 throw new LoginException(MessageConstant.USERNAME_ALREADY_EXISTS);
             }
         }
+
+        if (adminDTO.getPassword()!= "" && adminDTO.getPassword() != null)  {
+            admin.setPassword(DigestUtils.md5DigestAsHex(adminDTO.getPassword().getBytes()));
+        }
+
+
         // 更新管理员信息
         admin.setName(adminDTO.getName());
         admin.setUserName(adminDTO.getUserName());
