@@ -214,7 +214,6 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
 
         // 执行查询，并获取查询结果列表
         List<AccessRecord> carList = recordMapper.selectList(qw);
-        log.info("查询结果"+carList);
         List<CarVO> carVOList = new ArrayList<>();
         for (AccessRecord accessRecord : carList) {
             String licensePlate = accessRecord.getLicensePlate();
@@ -226,7 +225,6 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
 
         // 设置查询结果记录和总记录数
         pageResult.setRecords(carVOList);
-        log.info("最后结果"+carVOList);
         // 返回分页查询结果
         return pageResult;
 
