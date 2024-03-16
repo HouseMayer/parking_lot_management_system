@@ -85,7 +85,6 @@ public class UploadServiceImpl implements IUploadService {
         ValueOperations ops = redisTemplate.opsForValue();
 
         ops.set(licensePlate, filePathProperties.getUrl() + "/" + licensePlate + ".jpg");
-        log.info("上传成功:{}", filePathProperties.getUrl() + "/" + licensePlate + ".jpg");
 
         // 保存访问记录
         access_recordService.save(accessRecordDTO);
@@ -109,24 +108,30 @@ public class UploadServiceImpl implements IUploadService {
             // 如果原始文件存在，则删除它
             originalFile.delete();
         }
-        // 拟定新文件名（车牌号+.jpg）
-        File fileToDelete = new File(filePath + "\\" + licensePlate + ".jpg");
-
         // 设置访问记录信息
         AccessRecordDTO accessRecordDTO = new AccessRecordDTO();
         accessRecordDTO.setEndTime(String.valueOf(LocalDateTime.now()));
         accessRecordDTO.setLicensePlate(licensePlate);
 
-        log.info("exists:{}", fileToDelete.exists());
-        if (fileToDelete.exists()) {
-            // 如果文件已存在，则进行删除并更新数据库
-            fileToDelete.delete(); // 删除文件
-            stringRedisTemplate.delete(licensePlate); // 删除Redis中的记录
-            access_recordService.update(accessRecordDTO); // 更新数据库访问记录
-        } else {
-            // 如果文件不存在，进行新增操作
-            access_recordService.save(accessRecordDTO); // 新增数据库访问记录
+
+        ValueOperations ops = redisTemplate.opsForValue();
+
+        String delete = (String) ops.get("待删除");
+        if ( delete != null ){
+            File fileToDelete = new File(filePath + "\\" + delete + ".jpg");
+            if (fileToDelete.exists()) {
+                // 如果文件已存在，则进行删除并更新数据库
+                fileToDelete.delete(); // 删除文件
+                stringRedisTemplate.delete(licensePlate); // 删除Redis中的记录
+
+            } else {
+                // 如果文件不存在，进行新增操作
+                access_recordService.save(accessRecordDTO); // 新增数据库访问记录
+            }
+
         }
+        access_recordService.update(accessRecordDTO); // 更新数据库访问记录
+        ops.set("待删除", licensePlate);
         return filePathProperties.getUrl() + "/" + licensePlate + ".jpg";
     }
 

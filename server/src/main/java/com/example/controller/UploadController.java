@@ -50,10 +50,10 @@ public class UploadController {
     @RequestMapping("/out")
     public Result uploadOut(MultipartFile file) throws IOException {
         // 将文件转交给uploadService进行处理
-        uploadService.out(file);
+        String out = uploadService.out(file);
 
         // 返回操作成功的结果
-        return Result.success();
+        return Result.success(out);
     }
 
 
