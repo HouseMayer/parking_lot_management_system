@@ -28,6 +28,6 @@ public interface Access_recordMapper extends BaseMapper<AccessRecord> {
             "(#{licensePlate}, #{startTime}, #{endTime}, #{carport}, #{cost}, #{deleted}, #{updateTime}, #{updateUser}, #{createTime}, #{createUser})")
     void insertRecord(AccessRecord accessRecord);
 
-    @Select("select * from access_record where license_plate = #{licensePlate}")
+    @Select("select * from access_record where license_plate = #{licensePlate} and end_time is null")
     List<AccessRecord> getByLicensePlate(String licensePlate);
 }
