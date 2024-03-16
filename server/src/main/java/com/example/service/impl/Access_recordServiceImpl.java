@@ -144,16 +144,22 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
     public void update(AccessRecordDTO accessRecordDTO) {
         // 根据车牌号查询对应的访问记录
         List<AccessRecord> recordList = recordMapper.getByLicensePlate(accessRecordDTO.getLicensePlate());
-
-        // 寻找开始时间最早的访问记录
-        Optional<AccessRecord> max = recordList.stream().max((Comparator.comparing(AccessRecord::getStartTime)));
-        AccessRecord record = max.get();
-
-        float cost;
         // 如果未找到访问记录，则直接返回
-        if (record == null){
+        if (recordList == null || recordList.isEmpty()){
             return;
         }
+        AccessRecord record;
+        if (recordList.size() > 1){
+            // 寻找开始时间最早的访问记录
+            Optional<AccessRecord> max = recordList.stream().max((Comparator.comparing(AccessRecord::getStartTime)));
+            record = max.get();
+        } else {
+            record = recordList.get(0);
+        }
+
+
+        float cost;
+
 
         // 获取记录的开始时间
         LocalDateTime startTime = record.getStartTime();
