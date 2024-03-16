@@ -33,10 +33,10 @@ public class UploadController {
     @RequestMapping("/in")
     public Result uploadIn(MultipartFile file) throws IOException {
         // 将上传的文件交由uploadService处理
-        uploadService.in(file);
+        String in = uploadService.in(file);
 
         // 返回操作成功的结果
-        return Result.success();
+        return Result.success(in);
     }
 
 

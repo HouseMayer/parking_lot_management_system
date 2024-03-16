@@ -52,7 +52,7 @@ public class UploadServiceImpl implements IUploadService {
      * @throws IOException 当读写文件发生错误时抛出。
      */
     @Override
-    public void in(MultipartFile file) throws IOException {
+    public String in(MultipartFile file) throws IOException {
         // 获取文件保存路径
         String filePath = filePathProperties.getPath();
         // 从文件中提取车牌号
@@ -89,7 +89,7 @@ public class UploadServiceImpl implements IUploadService {
 
         // 保存访问记录
         access_recordService.save(accessRecordDTO);
-
+        return filePathProperties.getUrl() + "/" + licensePlate + ".jpg";
     }
 
     /**
@@ -98,7 +98,7 @@ public class UploadServiceImpl implements IUploadService {
      * @param file 上传的文件，预期为车牌照片。
      */
     @Override
-    public void out(MultipartFile file) {
+    public String out(MultipartFile file) {
         // 获取文件保存路径
         String filePath = filePathProperties.getPath();
         // 从文件中提取车牌号
@@ -127,7 +127,7 @@ public class UploadServiceImpl implements IUploadService {
             // 如果文件不存在，进行新增操作
             access_recordService.save(accessRecordDTO); // 新增数据库访问记录
         }
-
+        return filePathProperties.getUrl() + "/" + licensePlate + ".jpg";
     }
 
 

@@ -8,7 +8,7 @@ import java.io.IOException;
 public interface IUploadService {
 
 
-    void in(MultipartFile file) throws IOException;
+    String in(MultipartFile file) throws IOException;
 
-    void out(MultipartFile file);
+    String out(MultipartFile file);
 }
