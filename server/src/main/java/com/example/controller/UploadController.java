@@ -1,7 +1,10 @@
 package com.example.controller;
 
 
+import com.example.dto.PageQueryDTO;
+import com.example.result.PageResult;
 import com.example.result.Result;
+import com.example.service.IAccess_recordService;
 import com.example.service.IUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +21,8 @@ public class UploadController {
 
     @Resource
     private IUploadService uploadService;
-
+    @Resource
+    private IAccess_recordService recordService;
     /**
      * 处理文件上传的请求。
      *
@@ -50,6 +54,15 @@ public class UploadController {
 
         // 返回操作成功的结果
         return Result.success();
+    }
+
+
+    @RequestMapping("/page")
+    public Result<PageResult> list(PageQueryDTO pageQueryDTO) throws IOException {
+
+        PageResult pageResult = recordService.pageQueryIn(pageQueryDTO);
+
+        return Result.success(pageResult);
     }
 
 }

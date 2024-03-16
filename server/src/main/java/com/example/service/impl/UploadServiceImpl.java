@@ -39,7 +39,7 @@ public class UploadServiceImpl implements IUploadService {
     @Resource
     private FilePathProperties filePathProperties;
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
@@ -85,6 +85,7 @@ public class UploadServiceImpl implements IUploadService {
         ValueOperations ops = redisTemplate.opsForValue();
 
         ops.set(licensePlate, filePathProperties.getUrl() + "/" + licensePlate + ".jpg");
+        log.info("上传成功:{}", filePathProperties.getUrl() + "/" + licensePlate + ".jpg");
 
         // 保存访问记录
         access_recordService.save(accessRecordDTO);

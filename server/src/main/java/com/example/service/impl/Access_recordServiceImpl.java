@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constant.MessageConstant;
 import com.example.context.BaseContext;
 import com.example.dto.AccessRecordDTO;
+import com.example.dto.PageQueryDTO;
 import com.example.dto.RecordPageQueryDTO;
 import com.example.entity.AccessRecord;
 import com.example.exception.TimeException;
@@ -15,8 +16,10 @@ import com.example.mapper.CarportMapper;
 import com.example.mapper.GradeMapper;
 import com.example.result.PageResult;
 import com.example.service.IAccess_recordService;
+import com.example.vo.CarVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +28,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +51,8 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
     private CarportMapper carportMapper;
     @Resource
     private GradeMapper gradeMapper;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     /**
      * 分页查询记录
@@ -189,6 +195,43 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
         recordMapper.updateById(record);
     }
 
+    @Override
+    public PageResult pageQueryIn(PageQueryDTO pageQueryDTO) {
+        // 如果参数为空，则抛出运行时异常
+        if (pageQueryDTO == null) {
+            throw new RuntimeException("参数不能为空");
+        }
+
+        // 获取当前页面、每页数量和名称
+        int currentPage = pageQueryDTO.getPage();
+        int pageSize = pageQueryDTO.getPageSize();
+
+        // 创建查询条件封装对象，并根据名称进行模糊查询
+        QueryWrapper qw = new QueryWrapper();
+        qw.isNull("end_time");
+        qw.select("license_plate");
+        qw.orderByDesc("start_time");
+
+        // 执行查询，并获取查询结果列表
+        List<AccessRecord> carList = recordMapper.selectList(qw);
+        log.info("查询结果"+carList);
+        List<CarVO> carVOList = new ArrayList<>();
+        for (AccessRecord accessRecord : carList) {
+            String licensePlate = accessRecord.getLicensePlate();
+            String picture = (String) redisTemplate.opsForValue().get(licensePlate);
+            carVOList.add(new CarVO(picture, licensePlate));
+        }
+        // 创建分页查询结果对象
+        PageResult pageResult = new PageResult();
+
+        // 设置查询结果记录和总记录数
+        pageResult.setRecords(carVOList);
+        log.info("最后结果"+carVOList);
+        // 返回分页查询结果
+        return pageResult;
+
+
+    }
 
 
 }
