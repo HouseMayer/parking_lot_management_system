@@ -18,6 +18,7 @@ public class MessageConstant {
     public static final String CARPORT_ALREADY_EXISTS = "车位名称已存在";
     public static final String LICENSE_PLATE_ALREADY_EXISTS = "该车牌已存在";
     public static final String LICENSE_PLATE_NOT_FOUND = "车牌不存在";
+    public static final String LICENSE_PLATE_IN_BLACKLIST = "车牌在黑名单中";
     public static final String TIME_ERROR = "时间错误";
     public static final String UNKNOWN_ERROR = "未知错误";
     public static final String INVALID_DOCUMENT = "该文件是一个文件夹，请指定一个有效的文件";
