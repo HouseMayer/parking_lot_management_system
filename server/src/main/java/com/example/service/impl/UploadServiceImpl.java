@@ -1,9 +1,11 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.api.auth.AuthService;
 import com.example.constant.MessageConstant;
 import com.example.dto.AccessRecordDTO;
 import com.example.exception.FileException;
+import com.example.mapper.GradeMapper;
 import com.example.properties.FilePathProperties;
 import com.example.service.IAccess_recordService;
 import com.example.service.IUploadService;
@@ -37,6 +39,8 @@ public class UploadServiceImpl implements IUploadService {
     @Resource
     private IAccess_recordService access_recordService;
     @Resource
+    private GradeMapper gradeMapper;
+    @Resource
     private FilePathProperties filePathProperties;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
@@ -57,6 +61,25 @@ public class UploadServiceImpl implements IUploadService {
         String filePath = filePathProperties.getPath();
         // 从文件中提取车牌号
         String licensePlate = licensePlate(file);
+        String originalFilename = file.getOriginalFilename();
+        QueryWrapper qw = new QueryWrapper<>();
+        qw.eq("license_plate", licensePlate);
+        qw.eq("grade", "0");
+        if (gradeMapper.selectList(qw).size() != 0) {
+            // 构造原始文件名对应的文件对象，用于后续删除
+            File fileToDelete = new File(filePath + "\\" + originalFilename);
+            if (fileToDelete.exists()) {
+                // 如果原始文件存在，则删除它
+                fileToDelete.delete();
+            } else {
+                // 如果不存在，抛出文件未找到异常
+                throw new FileException(MessageConstant.FILE_NOT_FOUND);
+            }
+
+            // 如果该车牌号已存在，则抛出该车牌号在黑名单异常
+            throw new FileException(MessageConstant.LICENSE_PLATE_IN_BLACKLIST);
+        }
+
         // 构造新文件名，以车牌号命名
         File newFile = new File(filePath, licensePlate + ".jpg");
         // 创建文件输出流，准备写入文件
@@ -66,7 +89,7 @@ public class UploadServiceImpl implements IUploadService {
         // 关闭文件输出流
         fos.close();
         // 获取上传文件的原始名称
-        String originalFilename = file.getOriginalFilename();
+
         // 构造原始文件名对应的文件对象，用于后续删除
         File fileToDelete = new File(filePath + "\\" + originalFilename);
         if (fileToDelete.exists()) {
