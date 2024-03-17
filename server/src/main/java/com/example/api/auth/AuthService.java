@@ -2,14 +2,14 @@ package com.example.api.auth;
 
 import com.example.properties.BaiduProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import okhttp3.*;
+import org.json.JSONObject;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j

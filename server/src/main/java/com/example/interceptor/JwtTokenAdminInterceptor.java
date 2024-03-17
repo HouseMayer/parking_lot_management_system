@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.Enumeration;
-
 
 /**
  * jwt令牌校验的拦截器

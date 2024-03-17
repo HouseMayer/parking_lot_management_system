@@ -9,8 +9,6 @@ import com.example.context.BaseContext;
 import com.example.dto.AreaDTO;
 import com.example.dto.PageQueryDTO;
 import com.example.entity.Area;
-import com.example.entity.Carport;
-import com.example.entity.User;
 import com.example.exception.AccountLockedException;
 import com.example.exception.LoginException;
 import com.example.mapper.AreaMapper;
