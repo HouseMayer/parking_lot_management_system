@@ -54,7 +54,9 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
         int pageSize = pageQueryDTO.getPageSize();
         String licensePlate = pageQueryDTO.getKeyword();
         // 创建查询条件封装对象，并根据名称进行模糊查询
-        QueryWrapper<Grade> wrapper = new QueryWrapper<Grade>().like("license_plate", licensePlate);
+        QueryWrapper<Grade> wrapper = new QueryWrapper<Grade>()
+                .like("license_plate", licensePlate)
+                .orderByDesc("deadline");
 
         // 创建分页对象
         IPage<Grade> page = new Page<>(currentPage, pageSize);
