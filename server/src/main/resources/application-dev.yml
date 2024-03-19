@@ -17,5 +17,5 @@ redis:
   password: 123
   database: 10
 file:
-  path1: C:\Work\WorkSpace\IDEA_WorkSpace\parking-lot-manager-system\server\src\main\resources\static\file
+  path1: server/src/main/resources/static/file
   path2: http://127.0.0.1:8080/file

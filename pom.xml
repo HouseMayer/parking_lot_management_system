@@ -11,11 +11,11 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>vue-element-admin-springboot</artifactId>
+    <artifactId>parking-lot-management-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>vue-element-admin-springboot</name>
-    <description>vue-element-admin-springboot</description>
+    <name>parking-lot-management-system</name>
+    <description>parking-lot-management-system</description>
 
 
     <modules>
@@ -25,7 +25,7 @@
     </modules>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <mybatis.spring>3.0.3</mybatis.spring>
         <mybatis-plus>3.5.4</mybatis-plus>
         <lombok>1.18.20</lombok>
