@@ -79,7 +79,7 @@ public class UploadServiceImpl implements IUploadService {
             // 如果该车牌号已存在，则抛出该车牌号在黑名单异常
             throw new FileException(MessageConstant.LICENSE_PLATE_IN_BLACKLIST);
         }
-
+        log.info("车牌号：" + licensePlate);
         // 构造新文件名，以车牌号命名
         File newFile = new File(filePath, licensePlate + ".jpg");
         // 创建文件输出流，准备写入文件
