@@ -14,7 +14,7 @@ public class UrlCorsConfiguration implements Filter {
                          FilterChain chain) throws IOException, ServletException {
 
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4399");
+        response.setHeader("Access-Control-Allow-Origin", "http://118.31.117.101:4399");
         //允许跨域的请求方法GET, POST, HEAD 等
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
         //重新预检验跨域的缓存时间 (s)
