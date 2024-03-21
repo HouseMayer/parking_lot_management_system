@@ -7,7 +7,7 @@ baidu:
 
 spring:
   profiles:
-    active: dev
+    active: pre
   main:
     allow-circular-references: true
   datasource:
