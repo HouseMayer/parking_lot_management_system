@@ -55,11 +55,6 @@ public class User implements Serializable {
     private Integer role;
 
     /**
-     * 头像
-     */
-    private String avatar;
-
-    /**
      * 逻辑删除
      */
     @TableLogic

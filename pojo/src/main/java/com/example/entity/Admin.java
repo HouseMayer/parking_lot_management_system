@@ -55,11 +55,6 @@ public class Admin implements Serializable {
     private String role;
 
     /**
-     * 头像
-     */
-    private String avatar;
-
-    /**
      * 介绍
      */
     private String introduction;
