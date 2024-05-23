@@ -71,7 +71,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         int pageSize = pageQueryDTO.getPageSize();
         String name = pageQueryDTO.getKeyword();
         // 创建查询条件封装对象，并根据名称进行模糊查询
-        QueryWrapper<Admin> wrapper = new QueryWrapper<Admin>().like("name", name);
+        QueryWrapper<Admin> wrapper = new QueryWrapper<Admin>().like("name", name).ne("role", 0);
         // 创建分页对象
         IPage<Admin> page = new Page<>(currentPage, pageSize);
         // 执行查询，并获取查询结果列表
@@ -232,7 +232,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         // 构建并返回AdminInfoVO对象
         return AdminInfoVO.builder()
-                .avatar(admin.getAvatar())
                 .introduction(admin.getIntroduction())
                 .name(admin.getName())
                 .roles(roles)
