@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.api.auth.AuthService;
 import com.example.constant.MessageConstant;
 import com.example.dto.AccessRecordDTO;
+import com.example.entity.AccessRecord;
 import com.example.exception.FileException;
+import com.example.mapper.Access_recordMapper;
 import com.example.mapper.GradeMapper;
 import com.example.properties.FilePathProperties;
 import com.example.service.IAccess_recordService;
@@ -25,6 +27,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 
@@ -40,6 +43,8 @@ public class UploadServiceImpl implements IUploadService {
     private IAccess_recordService access_recordService;
     @Resource
     private GradeMapper gradeMapper;
+    @Resource
+    private Access_recordMapper access_recordMapper;
     @Resource
     private FilePathProperties filePathProperties;
     @Resource
@@ -78,6 +83,16 @@ public class UploadServiceImpl implements IUploadService {
 
             // 如果该车牌号已存在，则抛出该车牌号在黑名单异常
             throw new FileException(MessageConstant.LICENSE_PLATE_IN_BLACKLIST);
+        }
+
+        QueryWrapper qw1 = new QueryWrapper<>();
+        qw1.eq("license_plate", licensePlate);
+        qw1.isNull("end_time");
+        AccessRecord accessRecord = access_recordMapper.selectOne(qw1);
+        if (accessRecord != null) {
+            accessRecord.setEndTime(accessRecord.getStartTime());
+            accessRecord.setCost(BigDecimal.valueOf(0));
+            access_recordMapper.updateById(accessRecord);
         }
 
         // 构造新文件名，以车牌号命名
@@ -142,7 +157,7 @@ public class UploadServiceImpl implements IUploadService {
         String delete = (String) ops.get("待删除");
         if ( delete != null ){
             File fileToDelete = new File(filePath + "\\" + delete + ".jpg");
-            if (fileToDelete.exists()) {
+            if (fileToDelete.exists() && delete != licensePlate) {
                 // 如果文件已存在，则进行删除并更新数据库
                 fileToDelete.delete(); // 删除文件
                 stringRedisTemplate.delete(licensePlate); // 删除Redis中的记录
@@ -153,6 +168,8 @@ public class UploadServiceImpl implements IUploadService {
             }
 
         }
+
+
         access_recordService.update(accessRecordDTO); // 更新数据库访问记录
         ops.set("待删除", licensePlate);
         return filePathProperties.getUrl() + "/" + licensePlate + ".jpg";
