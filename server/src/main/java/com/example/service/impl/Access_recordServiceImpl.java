@@ -123,7 +123,12 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
         BeanUtils.copyProperties(accessRecordDTO, accessRecord);
         if (accessRecordDTO.getStartTime() != null){
             accessRecord.setStartTime(LocalDateTime.parse(accessRecordDTO.getStartTime()));
-        }else if (accessRecordDTO.getEndTime() != null){
+        }else {
+            accessRecord.setEndTime(LocalDateTime.parse(accessRecordDTO.getEndTime()));
+            accessRecord.setCost(BigDecimal.valueOf(0));
+        }
+
+        if (accessRecordDTO.getEndTime() != null){
             accessRecord.setEndTime(LocalDateTime.parse(accessRecordDTO.getEndTime()));
         }
 
