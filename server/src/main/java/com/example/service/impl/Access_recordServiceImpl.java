@@ -180,12 +180,12 @@ public class Access_recordServiceImpl extends ServiceImpl<Access_recordMapper, A
         }else if (hours < 2){
             cost = 0;
         } else if (hours < 24) {
-            cost = 5 + hours - 2;
+            cost = hours - 2;
             if (cost > 12){
                 cost = 12;
             }
         }else {
-            cost = hours / 24L + (hours % 24L > 12 ? 12 : hours % 24L);
+            cost = (hours / 24L) * 12 + (hours % 24L > 12 ? 12 : hours % 24L);
         }
 
         // 根据车牌号查询等级并根据等级调整费用
