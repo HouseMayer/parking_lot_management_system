@@ -219,9 +219,21 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
                 row = sheet1.getRow(7 + i);
                 row.getCell(1).setCellValue(accessRecord.getEndTime().toLocalDate().toString());
                 row.getCell(2).setCellValue(accessRecord.getLicensePlate());
-                row.getCell(3).setCellValue(accessRecord.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                row.getCell(4).setCellValue(accessRecord.getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                row.getCell(5).setCellValue(Duration.between(accessRecord.getStartTime(), accessRecord.getEndTime()).toMinutes()/60);
+                if (accessRecord.getStartTime() == null){
+                    row.getCell(3).setCellValue("");
+                } else {
+                    row.getCell(3).setCellValue(accessRecord.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                }
+                if (accessRecord.getEndTime() == null){
+                    row.getCell(3).setCellValue("");
+                } else {
+                    row.getCell(4).setCellValue(accessRecord.getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                }
+                if (accessRecord.getStartTime() == null || accessRecord.getEndTime() == null){
+                    row.getCell(5).setCellValue(0);
+                } else {
+                    row.getCell(5).setCellValue(Duration.between(accessRecord.getStartTime(), accessRecord.getEndTime()).toMinutes()/60);
+                }
                 row.getCell(6).setCellValue(accessRecord.getCost().floatValue());
             }
             File file = new File("C:/Users/lb267/Desktop/报表/" + name + ".xlsx");
