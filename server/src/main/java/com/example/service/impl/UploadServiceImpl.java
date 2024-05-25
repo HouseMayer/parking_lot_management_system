@@ -157,7 +157,7 @@ public class UploadServiceImpl implements IUploadService {
         String delete = (String) ops.get("待删除");
         if ( delete != null ){
             File fileToDelete = new File(filePath + "\\" + delete + ".jpg");
-            if (fileToDelete.exists() && delete != licensePlate) {
+            if (fileToDelete.exists()) {
                 // 如果文件已存在，则进行删除并更新数据库
                 fileToDelete.delete(); // 删除文件
                 stringRedisTemplate.delete(licensePlate); // 删除Redis中的记录
