@@ -158,7 +158,10 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
         LocalDate deadline = LocalDate.parse(gradeDTO.getDeadline());
 
         grade.setDeadline(deadline);
-
+        // 设置更新时间为当前时间
+        grade.setUpdateTime(LocalDateTime.now());
+        // 设置更新用户为当前用户
+        grade.setUpdateUser(BaseContext.getCurrentId());
         gradeMapper.updateById(grade);
     }
 

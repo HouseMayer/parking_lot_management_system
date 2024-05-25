@@ -23,9 +23,9 @@ public interface GradeMapper extends BaseMapper<Grade> {
     Grade getLicensePlate(String licensePlate);
 
     @AutoFill(OperationType.INSERT)
-    @Insert("insert into grade(license_plate,owner,grade,deadline,phone,comment) " +
+    @Insert("insert into grade(license_plate,owner,grade,deadline,phone,comment,update_time,update_user,create_time,create_user) " +
             "values" +
-            "(#{licensePlate},#{owner},#{grade},#{deadline},#{phone},#{comment})")
+            "(#{licensePlate},#{owner},#{grade},#{deadline},#{phone},#{comment},#{updateTime},#{updateUser},#{createTime},#{createUser})")
     void insertGrade(Grade grade);
 
     @Select("select license_plate from grade where license_plate = #{licensePlate}")

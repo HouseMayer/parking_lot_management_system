@@ -96,6 +96,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         }
 
         area.setDeleted(0);
+
         areaMapper.insertArea(area);
     }
 
@@ -113,6 +114,8 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
                 throw new LoginException(MessageConstant.AREA_ALREADY_EXISTS);
             }
             area.setName(areaDTO.getName());
+            area.setUpdateTime(LocalDateTime.now());
+            area.setUpdateUser(BaseContext.getCurrentId());
             areaMapper.updateById(area);
         }
     }
