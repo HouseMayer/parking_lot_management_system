@@ -57,7 +57,7 @@ public class reportTask {
         report.setDeleted(0);
         reportMapper.insertReport(report);
     }
-//    @Scheduled(cron = "0 0/1 * * * ?") // 每分钟执行一次。
+//    @Scheduled(cron = "0 0/1 * * * ?") // 每分钟执行一次
     public void reportTaskTest() {
         log.info("开始reportTaskTest");
         LocalDate day = LocalDate.of(2024, 2, 15);
